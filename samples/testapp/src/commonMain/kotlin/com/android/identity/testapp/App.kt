@@ -27,15 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.android.identity.appsupport.ui.AppTheme
 import com.android.identity.secure_area_test_app.ui.CloudSecureAreaScreen
-import com.android.identity.testapp.ui.AboutScreen
-import com.android.identity.testapp.ui.AndroidKeystoreSecureAreaScreen
-import com.android.identity.testapp.ui.ConsentModalBottomSheetListScreen
-import com.android.identity.testapp.ui.ConsentModalBottomSheetScreen
-import com.android.identity.testapp.ui.PassphraseEntryFieldScreen
-import com.android.identity.testapp.ui.SecureEnclaveSecureAreaScreen
-import com.android.identity.testapp.ui.SoftwareSecureAreaScreen
-import com.android.identity.testapp.ui.StartScreen
-import com.android.identity.testapp.ui.VerifierType
+import com.android.identity.testapp.ui.*
 import identitycredential.samples.testapp.generated.resources.Res
 import identitycredential.samples.testapp.generated.resources.back_button
 import kotlinx.coroutines.CoroutineScope
@@ -93,6 +85,7 @@ class App {
                             onClickCloudSecureArea = { navController.navigate(CloudSecureAreaDestination.route) },
                             onClickSecureEnclaveSecureArea = { navController.navigate(SecureEnclaveSecureAreaDestination.route) },
                             onClickPassphraseEntryField = { navController.navigate(PassphraseEntryFieldDestination.route) },
+                            onClickPreconsent = { navController.navigate(PreconsentDestination.route) },
                             onClickConsentSheetList = { navController.navigate(ConsentModalBottomSheetListDestination.route) },
                         )
                     }
@@ -114,6 +107,10 @@ class App {
                     composable(route = PassphraseEntryFieldDestination.route) {
                         PassphraseEntryFieldScreen(showToast = { message -> showToast(message) })
                     }
+                    composable(route = PreconsentDestination.route) {
+                       PreconsentScreen()
+                    }
+
                     composable(route = ConsentModalBottomSheetListDestination.route) {
                         ConsentModalBottomSheetListScreen(
                             onConsentModalBottomSheetClicked =

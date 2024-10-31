@@ -12,12 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.android.identity.testapp.Platform
 import com.android.identity.testapp.platform
+import identitycredential.samples.testapp.generated.resources.*
 import identitycredential.samples.testapp.generated.resources.Res
 import identitycredential.samples.testapp.generated.resources.about_screen_title
 import identitycredential.samples.testapp.generated.resources.android_keystore_secure_area_screen_title
-import identitycredential.samples.testapp.generated.resources.passphrase_entry_field_screen_title
 import identitycredential.samples.testapp.generated.resources.cloud_secure_area_screen_title
 import identitycredential.samples.testapp.generated.resources.consent_modal_bottom_sheet_list_screen_title
+import identitycredential.samples.testapp.generated.resources.passphrase_entry_field_screen_title
 import identitycredential.samples.testapp.generated.resources.secure_enclave_secure_area_screen_title
 import identitycredential.samples.testapp.generated.resources.software_secure_area_screen_title
 import org.jetbrains.compose.resources.stringResource
@@ -30,6 +31,7 @@ fun StartScreen(
     onClickCloudSecureArea: () -> Unit = {},
     onClickSecureEnclaveSecureArea: () -> Unit = {},
     onClickPassphraseEntryField: () -> Unit = {},
+    onClickPreconsent: () -> Unit = {},
     onClickConsentSheetList: () -> Unit = {},
 ) {
     Surface(
@@ -73,6 +75,12 @@ fun StartScreen(
                     }
                 }
             }
+            item {
+                TextButton(onClick = onClickPreconsent) {
+                    Text(stringResource(Res.string.preconsent_screen_title))
+                }
+            }
+
 
             item {
                 TextButton(onClick = onClickPassphraseEntryField) {

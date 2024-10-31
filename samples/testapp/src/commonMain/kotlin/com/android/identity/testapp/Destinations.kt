@@ -2,6 +2,7 @@ package com.android.identity.testapp
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import identitycredential.samples.testapp.generated.resources.*
 import identitycredential.samples.testapp.generated.resources.Res
 import identitycredential.samples.testapp.generated.resources.about_screen_title
 import identitycredential.samples.testapp.generated.resources.android_keystore_secure_area_screen_title
@@ -54,6 +55,11 @@ data object PassphraseEntryFieldDestination : Destination {
     override val title = Res.string.passphrase_entry_field_screen_title
 }
 
+data object PreconsentDestination: Destination {
+    override val route = "preconsent"
+    override val title = Res.string.preconsent_screen_title
+}
+
 data object ConsentModalBottomSheetListDestination : Destination {
     override val route = "consent_modal_bottom_sheet_list"
     override val title = Res.string.consent_modal_bottom_sheet_list_screen_title
@@ -80,5 +86,6 @@ val appDestinations = listOf(
     CloudSecureAreaDestination,
     PassphraseEntryFieldDestination,
     ConsentModalBottomSheetListDestination,
+    PreconsentDestination,
     ConsentModalBottomSheetDestination
 )
