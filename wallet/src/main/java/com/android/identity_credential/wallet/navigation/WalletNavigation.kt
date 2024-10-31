@@ -19,6 +19,7 @@ import com.android.identity_credential.wallet.ui.destination.document.DocumentDe
 import com.android.identity_credential.wallet.ui.destination.document.DocumentInfoScreen
 import com.android.identity_credential.wallet.ui.destination.document.EventLogScreen
 import com.android.identity_credential.wallet.ui.destination.main.MainScreen
+import com.android.identity_credential.wallet.ui.destination.preconsent.PreconsentScreen
 import com.android.identity_credential.wallet.ui.destination.provisioncredential.ProvisionDocumentScreen
 import com.android.identity_credential.wallet.ui.destination.qrengagement.QrEngagementScreen
 import com.android.identity_credential.wallet.ui.destination.reader.ReaderScreen
@@ -90,6 +91,13 @@ fun WalletNavigation(
          */
         composable(WalletDestination.About.route) {
             AboutScreen(onNavigate = onNavigate)
+        }
+
+        /**
+         * Preconsent Screen
+         */
+        composable(WalletDestination.Preconsents.route) {
+            PreconsentScreen(onNavigate = onNavigate)
         }
 
         /**

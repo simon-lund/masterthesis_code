@@ -19,6 +19,7 @@ sealed class WalletDestination(val routeEnum: Route) {
     // Screens with no arguments
     object Main : WalletDestination(Route.MAIN)
     object About : WalletDestination(Route.ABOUT)
+    object Preconsents : WalletDestination(Route.PRECONSENTS)
     object Settings : WalletDestination(Route.SETTINGS)
     object AddToWallet : WalletDestination(Route.ADD_TO_WALLET)
     object ProvisionDocument : WalletDestination(Route.PROVISION_DOCUMENT)
@@ -179,6 +180,7 @@ sealed class WalletDestination(val routeEnum: Route) {
 enum class Route(val routeName: String, val argumentsStr: String = "") {
     MAIN("main"),
     ABOUT("about"),
+    PRECONSENTS("preconsents"),
     SETTINGS("settings"),
     ADD_TO_WALLET("add_to_wallet"),
     DOCUMENT_INFO("document_info",

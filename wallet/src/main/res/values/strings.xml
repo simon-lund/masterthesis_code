@@ -62,6 +62,7 @@
     <string name="wallet_drawer_title">Wallet</string>
     <string name="wallet_drawer_add">Add to Wallet</string>
     <string name="wallet_drawer_settings">Settings</string>
+    <string name="wallet_drawer_preconsents">Preconsents</string>
     <string name="wallet_drawer_identity_reader">Identity Reader</string>
     <string name="wallet_drawer_about">About Wallet</string>
 
@@ -84,6 +85,10 @@
 
     <!-- About screen -->
     <string name="about_screen_title">About Wallet</string>
+
+    <!-- Preconsent screen -->
+    <string name="preconsent_screen_title">Preconsents</string>
+    <string name="preconsent_screen_no_preconsents">No preconsents set up.</string>
 
     <!-- Reader screens -->
     <string name="reader_screen_title">Identity Reader</string>
