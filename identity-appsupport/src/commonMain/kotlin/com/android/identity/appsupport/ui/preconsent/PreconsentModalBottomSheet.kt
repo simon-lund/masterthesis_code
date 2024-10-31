@@ -11,7 +11,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.android.identity.appsupport.ui.consent.*
+import identitycredential.identity_appsupport.generated.resources.Res
+import identitycredential.identity_appsupport.generated.resources.preconsent_modal_bottom_sheet_button_delete
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 
 /**
@@ -20,15 +23,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreconsentBottomSheet(
-    document: ConsentDocument,
-    relyingParty: ConsentRelyingParty,
-    consentFields: List<ConsentField>,
+    preconsent: Preconsent,
     sheetState: SheetState,
-    onDelete: () -> Unit,
+    onDelete: (id: String) -> Unit
 ) {
     // If a relying party is untrusted (i.e. trustPoint is null), throw an error
     // This should never happen in prod, because users can only set up pre-consents with trusted parties
-    relyingParty.trustPoint!!
+    preconsent.relyingParty.trustPoint!!
 
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
@@ -41,8 +42,8 @@ fun PreconsentBottomSheet(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             // Details displayed in the bottom sheet
-            RelyingPartySection(relyingParty)
-            DocumentSection(document)
+            RelyingPartySection(preconsent.relyingParty)
+            DocumentSection(preconsent.document)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -50,23 +51,20 @@ fun PreconsentBottomSheet(
                     .verticalScroll(scrollState)
                     .weight(0.9f, false)
             ) {
-                RequestSection(consentFields, relyingParty)
+                RequestSection(preconsent.consentFields, preconsent.relyingParty)
             }
 
             // Delete action
             // TODO: translate texts
-            // TODO: add confirm dialog
-            // TODO: implement button section
             Column(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             ) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     colors = buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                    onClick = { scope.launch { sheetState.hide(); onDelete() } },
+                    onClick = { scope.launch { sheetState.hide(); onDelete(preconsent.id) } }
                 ) {
-                    // TODO: add translations
-                    Text("Delete")
+                    Text(stringResource(Res.string.preconsent_modal_bottom_sheet_button_delete))
                 }
             }
         }

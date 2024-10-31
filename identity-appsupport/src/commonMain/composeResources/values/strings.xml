@@ -20,4 +20,10 @@
     <string name="consent_modal_bottom_sheet_data_element_icon_description">Data Element Icon</string>
     <string name="consent_modal_bottom_sheet_warning_icon_description">Warning Icon</string>
 
+    <!-- PreconsentModalBottomSheet -->
+    <string name="preconsent_modal_bottom_sheet_button_delete">Delete</string>
+
+    <!-- PreconsentList -->
+    <string name="preconsent_list_num_shared_fields_info">%1d fields will be shared</string>
+    <string name="preconsent_list_details_icon_description">Details Icon</string>
 </resources>

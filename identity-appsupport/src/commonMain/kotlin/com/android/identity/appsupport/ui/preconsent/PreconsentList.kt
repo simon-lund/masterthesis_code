@@ -16,6 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import identitycredential.identity_appsupport.generated.resources.Res
+import identitycredential.identity_appsupport.generated.resources.preconsent_list_details_icon_description
+import identitycredential.identity_appsupport.generated.resources.preconsent_list_num_shared_fields_info
+import org.jetbrains.compose.resources.stringResource
 
 
 /**
@@ -77,8 +81,7 @@ private fun PreconsentListItem(
                     )
                     Icon(
                         imageVector = Icons.AutoMirrored.Default.ArrowRight,
-                        // TODO: Localize
-                        contentDescription = "shared with",
+                        contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(24.dp)
                     )
@@ -91,8 +94,7 @@ private fun PreconsentListItem(
 
                 }
                 Text(
-                    // TODO: Localize
-                    text = "$numberOfFields shared data fields",
+                    text = stringResource(Res.string.preconsent_list_num_shared_fields_info, numberOfFields),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -103,8 +105,7 @@ private fun PreconsentListItem(
             // Indicator that item is expandable
             Icon(
                 imageVector = Icons.Rounded.ChevronRight,
-                // TODO: Localize
-                contentDescription = "Details",
+                contentDescription = stringResource(Res.string.preconsent_list_details_icon_description),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(24.dp)
             )
