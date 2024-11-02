@@ -97,7 +97,9 @@ fun WalletNavigation(
          * Preconsent Screen
          */
         composable(WalletDestination.Preconsents.route) {
-            PreconsentScreen(onNavigate = onNavigate)
+            PreconsentScreen(
+                preconsentStore = application.preconsentStore,
+                onNavigate = onNavigate)
         }
 
         /**

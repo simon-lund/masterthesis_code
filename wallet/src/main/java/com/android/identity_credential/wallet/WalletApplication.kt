@@ -29,7 +29,6 @@ import com.android.identity.android.securearea.AndroidKeystoreSecureArea
 import com.android.identity.android.securearea.cloud.CloudSecureArea
 import com.android.identity.android.storage.AndroidStorageEngine
 import com.android.identity.credential.CredentialFactory
-import com.android.identity.crypto.javaX509Certificate
 import com.android.identity.document.Document
 import com.android.identity.document.DocumentStore
 import com.android.identity.documenttype.DocumentTypeRepository
@@ -42,6 +41,7 @@ import com.android.identity.issuance.WalletApplicationCapabilities
 import com.android.identity.issuance.remote.WalletServerProvider
 import com.android.identity.mdoc.credential.MdocCredential
 import com.android.identity.mdoc.vical.SignedVical
+import com.android.identity.appsupport.ui.preconsent.PreconsentStore
 import com.android.identity.sdjwt.credential.SdJwtVcCredential
 import com.android.identity.securearea.SecureAreaRepository
 import com.android.identity.securearea.software.SoftwareSecureArea
@@ -105,6 +105,7 @@ class WalletApplication : Application() {
     lateinit var secureAreaRepository: SecureAreaRepository
     lateinit var credentialFactory: CredentialFactory
     lateinit var documentStore: DocumentStore
+    lateinit var preconsentStore: PreconsentStore
     lateinit var settingsModel: SettingsModel
     lateinit var documentModel: DocumentModel
     lateinit var readerModel: ReaderModel
@@ -189,6 +190,7 @@ class WalletApplication : Application() {
 
         // init documentStore
         documentStore = DocumentStore(storageEngine, secureAreaRepository, credentialFactory)
+        preconsentStore = PreconsentStore(storageEngine)
 
         // init Wallet Server
         walletServerProvider = WalletServerProvider(

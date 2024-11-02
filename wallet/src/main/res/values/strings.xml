@@ -89,6 +89,7 @@
     <!-- Preconsent screen -->
     <string name="preconsent_screen_title">Preconsents</string>
     <string name="preconsent_screen_no_preconsents">No preconsents set up.</string>
+    <string name="preconsent_screen_info">Preconsents are agreements with verifiers to share specific data of a document without explicit user consent. Click on a preconsent to view and optionally delete it.</string>
 
     <!-- Reader screens -->
     <string name="reader_screen_title">Identity Reader</string>
