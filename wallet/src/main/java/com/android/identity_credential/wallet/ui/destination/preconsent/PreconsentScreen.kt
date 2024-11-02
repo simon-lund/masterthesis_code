@@ -22,15 +22,14 @@ import kotlinx.coroutines.launch
  * Screen for managing pre-consents.
  * Wire up the [preconsentStore] to the UI composed of a list of pre-consents and a bottom sheet to view and delete individual pre-consents.
  *
- * @param preconsentStore the store for pre-consents
+ * @param onNavigate callback to navigate to another screen.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreconsentScreen(
-    preconsentStore: PreconsentStore,
     onNavigate: (String) -> Unit,
 ) {
-
+    val preconsentStore = remember { PreconsentStore.getInstance() }
     val preconsents = preconsentStore.preconsents
     var currentPreconsent by remember { mutableStateOf<Preconsent?>(null) }
     val scope = rememberCoroutineScope()

@@ -105,7 +105,6 @@ class WalletApplication : Application() {
     lateinit var secureAreaRepository: SecureAreaRepository
     lateinit var credentialFactory: CredentialFactory
     lateinit var documentStore: DocumentStore
-    lateinit var preconsentStore: PreconsentStore
     lateinit var settingsModel: SettingsModel
     lateinit var documentModel: DocumentModel
     lateinit var readerModel: ReaderModel
@@ -190,7 +189,7 @@ class WalletApplication : Application() {
 
         // init documentStore
         documentStore = DocumentStore(storageEngine, secureAreaRepository, credentialFactory)
-        preconsentStore = PreconsentStore(storageEngine)
+        PreconsentStore.createInstance(storageEngine)
 
         // init Wallet Server
         walletServerProvider = WalletServerProvider(

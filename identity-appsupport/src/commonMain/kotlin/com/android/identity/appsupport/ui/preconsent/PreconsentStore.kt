@@ -21,6 +21,20 @@ class PreconsentStore(
     var preconsents: List<Preconsent> = emptyList()
         private set
 
+    companion object {
+        private var instance: PreconsentStore? = null
+
+        fun getInstance(): PreconsentStore {
+            return instance!!
+        }
+
+        fun createInstance(storageEngine: StorageEngine): PreconsentStore {
+            instance?.let { throw IllegalStateException("PreconsentStore already initialized") }
+            instance = PreconsentStore(storageEngine)
+            return instance!!
+        }
+    }
+
     init {
         storageEngine
             .enumerate()
