@@ -16,6 +16,9 @@
 
 package com.android.identity.documenttype
 
+import com.android.identity.cbor.CborMap
+import com.android.identity.cbor.DataItem
+
 /**
  * Enumeration of the different types of Document Attributes
  *
@@ -36,4 +39,58 @@ sealed class DocumentAttributeType {
     object ComplexType : DocumentAttributeType()
     class StringOptions(val options: List<StringOption>) : DocumentAttributeType()
     class IntegerOptions(val options: List<IntegerOption>) : DocumentAttributeType()
+
+    /**
+     * Converts the type to a [DataItem].
+     */
+    fun toDataItem(): DataItem {
+        return CborMap.builder().apply {
+            when (this@DocumentAttributeType) {
+                is Blob -> put("type", "Blob")
+                is String -> put("type", "String")
+                is Number -> put("type", "Number")
+                is Date -> put("type", "Date")
+                is DateTime -> put("type", "DateTime")
+                is Picture -> put("type", "Picture")
+                is Boolean -> put("type", "Boolean")
+                is ComplexType -> put("type", "ComplexType")
+                is StringOptions -> put("type", "StringOptions")
+                is IntegerOptions -> put("type", "IntegerOptions")
+            }
+
+            // Type is either StringOptions or IntegerOptions, we also need to add the options
+            if (this@DocumentAttributeType is StringOptions || this@DocumentAttributeType is IntegerOptions) {
+                val optionsArray = putArray("options")
+                // TODO: Add options to the array
+            }
+        }.end().build()
+    }
+
+    companion object {
+        /**
+         * Creates a [DocumentAttributeType] from a [DataItem].
+         *
+         * @param dataItem must have been encoded with [toDataItem].
+         */
+        fun fromDataItem(dataItem: DataItem): DocumentAttributeType {
+            return when(dataItem["type"].asTstr) {
+                "Blob" -> Blob
+                "String" -> String
+                "Number" -> Number
+                "Date" -> Date
+                "DateTime" -> DateTime
+                "Picture" -> Picture
+                "Boolean" -> Boolean
+                "ComplexType" -> ComplexType
+                "StringOptions" ->  {
+                    StringOptions(emptyList())
+                }
+                "IntegerOptions" -> {
+                    IntegerOptions(emptyList())
+                }
+                else -> throw IllegalArgumentException("Unknown type")
+            }
+
+        }
+    }
 }

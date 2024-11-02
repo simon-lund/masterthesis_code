@@ -15,6 +15,9 @@
  */
 package com.android.identity.documenttype
 
+import com.android.identity.cbor.CborMap
+import com.android.identity.cbor.DataItem
+
 /**
  * Class that represents a combination of an integer value
  * and a name suitable for display
@@ -30,4 +33,28 @@ data class IntegerOption(
      * Show only the [displayName] in the toString function.
      */
     override fun toString(): String = displayName
+
+    /**
+     * Converts the [IntegerOption] to a [DataItem].
+     */
+    fun toDataItem(): DataItem {
+        return CborMap.builder().apply {
+            value?.let { put("value", it.toLong()) }
+            put("displayName", displayName)
+        }.end().build()
+    }
+
+    companion object {
+        /**
+         * Converts a [DataItem] to a [IntegerOption].
+         *
+         * @param dataItem must have been encoded with [toDataItem].
+         */
+        fun fromDataItem(dataItem: DataItem): IntegerOption {
+            return IntegerOption(
+                value = dataItem.getOrNull("value")?.asNumber?.toInt(),
+                displayName = dataItem["displayName"].asTstr
+            )
+        }
+    }
 }

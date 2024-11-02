@@ -16,6 +16,7 @@
 
 package com.android.identity.documenttype
 
+import com.android.identity.cbor.CborMap
 import com.android.identity.cbor.DataItem
 
 /**
@@ -35,4 +36,36 @@ class DocumentAttribute(
     val description: String,
     val icon: Icon?,
     val sampleValue: DataItem?
-)
+) {
+    /**
+     * Converts the attribute to a [DataItem].
+     */
+    fun toDataItem(): DataItem {
+        return CborMap.builder().apply {
+            put("type", type.toDataItem())
+            put("identifier", identifier)
+            put("displayName", displayName)
+            put("description", description)
+            icon?.let { put("icon", it.name) }
+            sampleValue?.let { put("sampleValue", it) }
+        }.end().build()
+    }
+
+    companion object {
+        /**
+         * Creates a [DocumentAttribute] from a [DataItem].
+         *
+         * @param dataItem must have been encoded with [toDataItem].
+         */
+        fun fromDataItem(dataItem: DataItem): DocumentAttribute {
+            return DocumentAttribute(
+                type = DocumentAttributeType.fromDataItem(dataItem["type"]),
+                identifier = dataItem["identifier"].asTstr,
+                displayName = dataItem["displayName"].asTstr,
+                description = dataItem["description"].asTstr,
+                icon = dataItem.getOrNull("iconName")?.let { Icon.valueOf(it.asTstr) },
+                sampleValue = dataItem.getOrNull("sampleValue")
+            )
+        }
+    }
+}

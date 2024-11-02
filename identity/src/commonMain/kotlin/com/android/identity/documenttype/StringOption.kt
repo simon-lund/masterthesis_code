@@ -16,6 +16,9 @@
 
 package com.android.identity.documenttype
 
+import com.android.identity.cbor.CborMap
+import com.android.identity.cbor.DataItem
+
 /**
  * Class that represents a combination of a string value
  * and a name suitable for display presentation.
@@ -31,4 +34,26 @@ data class StringOption(
      * Show only the [displayName] in the toString function.
      */
     override fun toString(): String = displayName
+
+    /**
+     * Converts the [StringOption] to a [DataItem].
+     */
+    fun toDataItem(): DataItem {
+        return CborMap.builder().apply {
+            value?.let { put("value", it) }
+            put("displayName", displayName)
+        }.end().build()
+    }
+
+    companion object {
+        /**
+         * Converts a [DataItem] to a [StringOption].
+         */
+        fun fromDataItem(dataItem: DataItem): StringOption {
+            return StringOption(
+                value = dataItem.getOrNull("value")?.asTstr,
+                displayName = dataItem["displayName"].asTstr
+            )
+        }
+    }
 }
