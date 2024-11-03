@@ -18,18 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -81,7 +71,7 @@ fun ConsentModalBottomSheet(
     consentFields: List<ConsentField>,
     document: ConsentDocument,
     relyingParty: ConsentRelyingParty,
-    onConfirm: () -> Unit = {},
+    onConfirm: (setupPreConsent: Boolean) -> Unit,
     onCancel: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
@@ -117,59 +107,9 @@ fun ConsentModalBottomSheet(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ButtonSection(
-    scope: CoroutineScope,
-    sheetState: SheetState,
-    onConfirm: () -> Unit,
-    onCancel: () -> Unit,
-    scrollState: ScrollState
-) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        TextButton(onClick = {
-            scope.launch {
-                sheetState.hide()
-                onCancel()
-            }
-        }) {
-            Text(text = stringResource(Res.string.consent_modal_bottom_sheet_button_cancel))
-        }
-
-        Button(
-            onClick = {
-                if (!scrollState.canScrollForward) {
-                    onConfirm()
-                } else {
-                    scope.launch {
-                        val step = (scrollState.viewportSize * 0.9).toInt()
-                        scrollState.animateScrollTo(
-                            min(
-                                scrollState.value + step,
-                                scrollState.maxValue
-                            )
-                        )
-                    }
-                }
-            }
-        ) {
-            if (scrollState.canScrollForward) {
-                Text(text = stringResource(Res.string.consent_modal_bottom_sheet_button_more))
-            } else {
-                Text(text = stringResource(Res.string.consent_modal_bottom_sheet_button_share))
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-private fun RelyingPartySection(relyingParty: ConsentRelyingParty) {
+public fun RelyingPartySection(relyingParty: ConsentRelyingParty) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -213,9 +153,76 @@ private fun RelyingPartySection(relyingParty: ConsentRelyingParty) {
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ButtonSection(
+    scope: CoroutineScope,
+    sheetState: SheetState,
+    onConfirm: (setupPreConsent: Boolean) -> Unit,
+    onCancel: () -> Unit,
+    scrollState: ScrollState
+) {
+    // TODO: show only if verifier is authenticated
+    // TODO: move to separate composable
+    var setupPreConsent by remember { mutableStateOf(false) }
+    // TODO: add state if outdated
+    // TODO: extension 1: hide if not all fields are approved for pre-consent
+
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(checked = setupPreConsent, onCheckedChange = { setupPreConsent = it })
+            // TODO: localize
+            Text("Set up pre-consent for this verifier.")
+        }
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            TextButton(onClick = {
+                scope.launch {
+                    sheetState.hide()
+                    onCancel()
+                }
+            }) {
+                Text(text = stringResource(Res.string.consent_modal_bottom_sheet_button_cancel))
+            }
+
+            Button(
+                onClick = {
+                    if (!scrollState.canScrollForward) {
+                        onConfirm(setupPreConsent)
+                    } else {
+                        scope.launch {
+                            val step = (scrollState.viewportSize * 0.9).toInt()
+                            scrollState.animateScrollTo(
+                                min(
+                                    scrollState.value + step,
+                                    scrollState.maxValue
+                                )
+                            )
+                        }
+                    }
+                }
+            ) {
+                if (scrollState.canScrollForward) {
+                    Text(text = stringResource(Res.string.consent_modal_bottom_sheet_button_more))
+                } else {
+                    Text(text = stringResource(Res.string.consent_modal_bottom_sheet_button_share))
+                }
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-private fun DocumentSection(document: ConsentDocument) {
+public fun DocumentSection(document: ConsentDocument) {
     Column(
         modifier = Modifier
             .padding(vertical = 2.dp)
@@ -261,13 +268,13 @@ private fun DocumentSection(document: ConsentDocument) {
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-private fun RequestSection(
+fun RequestSection(
     consentFields: List<ConsentField>,
     relyingParty: ConsentRelyingParty
 ) {
     val useColumns = consentFields.size > 5
     val (storedFields, notStoredFields) = consentFields.partition {
-        it is MdocConsentField && it.intentToRetain == true
+        it is MdocConsentField && it.intentToRetain
     }
 
     Column(
@@ -279,7 +286,7 @@ private fun RequestSection(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            if (notStoredFields.size > 0) {
+            if (notStoredFields.isNotEmpty()) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
@@ -348,7 +355,6 @@ private fun RequestSection(
             // TODO: When we upgrade to a newer version of compose-ui we can use
             //  AnnotatedString.fromHtml() and clicking the links will also work.
             //  See https://issuetracker.google.com/issues/139326648 for details.
-            //
             val annotatedLinkString = buildAnnotatedString {
                 val str = stringResource(Res.string.consent_modal_bottom_sheet_wallet_privacy_policy)
                 val startIndex = 4

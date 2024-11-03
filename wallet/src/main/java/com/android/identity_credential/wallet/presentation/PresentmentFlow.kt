@@ -34,6 +34,7 @@ import com.android.identity.appsupport.ui.consent.ConsentField
 import com.android.identity.appsupport.ui.consent.ConsentRelyingParty
 import com.android.identity.appsupport.ui.consent.MdocConsentField
 import com.android.identity.appsupport.ui.consent.VcConsentField
+import com.android.identity.appsupport.ui.preconsent.PreconsentStore
 import com.android.identity_credential.wallet.ui.prompt.consent.showConsentPrompt
 import com.android.identity_credential.wallet.ui.prompt.passphrase.showPassphrasePrompt
 
@@ -48,6 +49,51 @@ private suspend fun showPresentmentFlowImpl(
     credential: SecureAreaBoundCredential,
     signAndGenerate: (KeyUnlockData?) -> ByteArray
 ): ByteArray {
+    //  if so -> check if preconsent is valid
+    //  if not setup -> show consent prompt and check if user wants to setup preconsent
+    //  if so setup pre-consent
+
+    val preconsentStore = PreconsentStore.getInstance()
+
+    // *** Preconsent Logic ***
+    // 1. Check if relying party is trusted
+    // 2. Check if a preconsent is set up for the relying party
+    // 3. Check if the preconsent is valid
+
+    // 1. Check if relying party is trusted (if no, show consent prompt but no option to set up preconsent, else continue)
+    // 2. Check if preconsent is set up for the relying party (if no, show consent prompt with option to set up preconsent, else continue)
+    // 3. Check if preconsent is valid (if no, show consent prompt but with information that preconsent is set up however outdated, else skip consent prompt)
+    //   (3. must be handled in the showConsentPrompt function)
+    val isTrusted = relyingParty.trustPoint != null
+    if(isTrusted) {
+        val existingPreconsent = preconsentStore.preconsents.find {
+            // Compare the relevant document fields
+            val documentNameEquals = document.name == it.document.name
+            val documentDescriptionEquals = document.description == it.document.description
+
+            // Compare the TrustPoint's certificate of the relying party
+            val encodedCertificate = relyingParty.trustPoint?.certificate?.encodedCertificate!!
+            val certificateEquals =
+                encodedCertificate.contentEquals(it.relyingParty.trustPoint?.certificate?.encodedCertificate)
+
+            documentNameEquals && documentDescriptionEquals && certificateEquals
+        }
+
+        if (existingPreconsent != null) {
+            // We have to check the validity of the preconsent
+            // If consent fields were removed, we update the preconsent right away and skip consent
+            // (removing things is good, and no consent is needed)
+
+
+            // If consent fields were added, we show the consent prompt and highlight the added fields in the list
+            // (adding things is bad, and consent is needed)
+
+        }
+    }
+
+    // TODO: enable preconsent if trusted
+    // TODO: show preconsent setup if not set up
+    // TODO: skip if preconsent and nothing changed
     // always show the Consent Prompt first
     showConsentPrompt(
         activity = activity,

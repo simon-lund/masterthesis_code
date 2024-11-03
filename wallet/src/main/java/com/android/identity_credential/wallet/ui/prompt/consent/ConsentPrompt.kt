@@ -36,7 +36,8 @@ suspend fun showConsentPrompt(
             consentFields = consentFields,
             document = document,
             relyingParty = relyingParty,
-            onConsentPromptResult = { promptWasSuccessful ->
+            onConsentPromptResult = { promptWasSuccessful, setupPreConsent ->
+                // TODO: setup preconsent here? or in contuaition
                 continuation.resume(promptWasSuccessful)
             }
         )
@@ -55,7 +56,8 @@ class ConsentPrompt(
     private val consentFields: List<ConsentField>,
     private val document: ConsentDocument,
     private val relyingParty: ConsentRelyingParty,
-    private val onConsentPromptResult: (Boolean) -> Unit,
+    // First is consent, second is pre-consent
+    private val onConsentPromptResult: (Boolean, setupPreConsent: Boolean?) -> Unit
 ) : BottomSheetDialogFragment() {
     /**
      * Define the composable [ConsentModalBottomSheet] and issue callbacks to [onConsentPromptResult]
@@ -85,15 +87,15 @@ class ConsentPrompt(
                         document = document,
                         relyingParty = relyingParty,
                         // user accepted to send requested credential data
-                        onConfirm = {
+                        onConfirm = { setupPreConsent ->
                             // notify that the user tapped on the 'Confirm' button
-                            onConsentPromptResult.invoke(true)
+                            onConsentPromptResult.invoke(true, setupPreConsent)
                             dismiss()
                         },
                         // user declined submitting data to requesting party
                         onCancel = {
                             // notify that the user tapped on the 'Cancel' button
-                            onConsentPromptResult.invoke(false)
+                            onConsentPromptResult.invoke(false, null)
                             dismiss()
                         }
                     )
