@@ -61,6 +61,9 @@ import kotlin.math.min
  * @param consentFields the list of consent fields to show.
  * @param document details about the document being presented.
  * @param relyingParty a structure for conveying who is asking for the information.
+ * @param isPreconsentAllowed whether a user can set up pre-consent.
+ * @param addedFields if not empty, a pre-consent exists but the relying party additionally requires the listed fields.
+ * These fields are highlighted in the list of fields in the consent form. (Invariant: if not empty, [isPreconsentAllowed] must be true)
  * @param onConfirm called when the sheet is dismissed.
  * @param onCancel called when the user presses the "Share" button.
  */
@@ -71,9 +74,12 @@ fun ConsentModalBottomSheet(
     consentFields: List<ConsentField>,
     document: ConsentDocument,
     relyingParty: ConsentRelyingParty,
+    isPreconsentAllowed: Boolean,
+    addedFields: List<ConsentField>,
     onConfirm: (setupPreConsent: Boolean) -> Unit,
     onCancel: () -> Unit = {}
 ) {
+    // TODO: implement preconsent
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 

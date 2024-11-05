@@ -15,6 +15,7 @@ import com.android.identity.appsupport.ui.consent.ConsentDocument
 import com.android.identity.appsupport.ui.consent.ConsentRelyingParty
 import com.android.identity_credential.wallet.ui.theme.IdentityCredentialTheme
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -28,18 +29,19 @@ suspend fun showConsentPrompt(
     activity: FragmentActivity,
     document: ConsentDocument,
     relyingParty: ConsentRelyingParty,
-    consentFields: List<ConsentField>
-): Boolean =
+    consentFields: List<ConsentField>,
+    isPreconsentAllowed: Boolean,
+    addedFields: List<ConsentField>
+): Pair<Boolean, Boolean> =
     suspendCancellableCoroutine { continuation ->
         // new instance of the ConsentPrompt bottom sheet dialog fragment but not shown yet
         val consentPrompt = ConsentPrompt(
             consentFields = consentFields,
             document = document,
             relyingParty = relyingParty,
-            onConsentPromptResult = { promptWasSuccessful, setupPreConsent ->
-                // TODO: setup preconsent here? or in contuaition
-                continuation.resume(promptWasSuccessful)
-            }
+            isPreconsentAllowed = isPreconsentAllowed,
+            addedFields = addedFields,
+            onConsentPromptResult = continuation::resume
         )
         // show the consent prompt fragment
         consentPrompt.show(activity.supportFragmentManager, "consent_prompt")
@@ -56,8 +58,10 @@ class ConsentPrompt(
     private val consentFields: List<ConsentField>,
     private val document: ConsentDocument,
     private val relyingParty: ConsentRelyingParty,
+    private val isPreconsentAllowed: Boolean,
+    private val addedFields: List<ConsentField>,
     // First is consent, second is pre-consent
-    private val onConsentPromptResult: (Boolean, setupPreConsent: Boolean?) -> Unit
+    private val onConsentPromptResult:  (Pair<Boolean, Boolean>) -> Unit
 ) : BottomSheetDialogFragment() {
     /**
      * Define the composable [ConsentModalBottomSheet] and issue callbacks to [onConsentPromptResult]
@@ -86,16 +90,18 @@ class ConsentPrompt(
                         consentFields = consentFields,
                         document = document,
                         relyingParty = relyingParty,
+                        isPreconsentAllowed = isPreconsentAllowed,
+                        addedFields = addedFields,
                         // user accepted to send requested credential data
                         onConfirm = { setupPreConsent ->
                             // notify that the user tapped on the 'Confirm' button
-                            onConsentPromptResult.invoke(true, setupPreConsent)
+                            onConsentPromptResult.invoke(Pair(true, setupPreConsent))
                             dismiss()
                         },
                         // user declined submitting data to requesting party
                         onCancel = {
                             // notify that the user tapped on the 'Cancel' button
-                            onConsentPromptResult.invoke(false, null)
+                            onConsentPromptResult.invoke(Pair(false, false))
                             dismiss()
                         }
                     )

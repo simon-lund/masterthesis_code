@@ -34,6 +34,7 @@ import com.android.identity.appsupport.ui.consent.ConsentField
 import com.android.identity.appsupport.ui.consent.ConsentRelyingParty
 import com.android.identity.appsupport.ui.consent.MdocConsentField
 import com.android.identity.appsupport.ui.consent.VcConsentField
+import com.android.identity.appsupport.ui.preconsent.Preconsent
 import com.android.identity.appsupport.ui.preconsent.PreconsentStore
 import com.android.identity_credential.wallet.ui.prompt.consent.showConsentPrompt
 import com.android.identity_credential.wallet.ui.prompt.passphrase.showPassphrasePrompt
@@ -49,62 +50,103 @@ private suspend fun showPresentmentFlowImpl(
     credential: SecureAreaBoundCredential,
     signAndGenerate: (KeyUnlockData?) -> ByteArray
 ): ByteArray {
-    //  if so -> check if preconsent is valid
-    //  if not setup -> show consent prompt and check if user wants to setup preconsent
-    //  if so setup pre-consent
-
     val preconsentStore = PreconsentStore.getInstance()
 
     // *** Preconsent Logic ***
-    // 1. Check if relying party is trusted
-    // 2. Check if a preconsent is set up for the relying party
-    // 3. Check if the preconsent is valid
+    // Check if the relying party is trusted
+    val isRelyingPartyTrusted = relyingParty.trustPoint != null
 
-    // 1. Check if relying party is trusted (if no, show consent prompt but no option to set up preconsent, else continue)
-    // 2. Check if preconsent is set up for the relying party (if no, show consent prompt with option to set up preconsent, else continue)
-    // 3. Check if preconsent is valid (if no, show consent prompt but with information that preconsent is set up however outdated, else skip consent prompt)
-    //   (3. must be handled in the showConsentPrompt function)
-    val isTrusted = relyingParty.trustPoint != null
-    if(isTrusted) {
-        val existingPreconsent = preconsentStore.preconsents.find {
-            // Compare the relevant document fields
+    // Check if a preconsent exists for the (document, relyingParty) pair
+    val existingPreconsent: Preconsent? = if (isRelyingPartyTrusted) {
+        preconsentStore.preconsents.find {
             val documentNameEquals = document.name == it.document.name
             val documentDescriptionEquals = document.description == it.document.description
-
-            // Compare the TrustPoint's certificate of the relying party
             val encodedCertificate = relyingParty.trustPoint?.certificate?.encodedCertificate!!
             val certificateEquals =
                 encodedCertificate.contentEquals(it.relyingParty.trustPoint?.certificate?.encodedCertificate)
-
             documentNameEquals && documentDescriptionEquals && certificateEquals
         }
+    } else null
 
-        if (existingPreconsent != null) {
-            // We have to check the validity of the preconsent
-            // If consent fields were removed, we update the preconsent right away and skip consent
-            // (removing things is good, and no consent is needed)
+    // Check if previously not requested consent fields are now requested
+    val addedFields = if (existingPreconsent != null) {
+        val displayNames = existingPreconsent.consentFields.map { it.displayName }
+        consentFields.filter { it.displayName !in displayNames }
+    } else emptyList()
 
+    // Check if the consent prompt can be skipped
+    val skipConsentPrompt = isRelyingPartyTrusted && existingPreconsent != null && addedFields.isEmpty()
+    if (!skipConsentPrompt) {
+        // TODO: extend this to check whether one of the consent fields are not enabled for preconsent, in that case do not allow preconsent
+        val isPreconsentAllowed = isRelyingPartyTrusted
 
-            // If consent fields were added, we show the consent prompt and highlight the added fields in the list
-            // (adding things is bad, and consent is needed)
+        // show consent prompt
+        showConsentPrompt(
+            activity = activity,
+            document = document,
+            relyingParty = relyingParty,
+            consentFields = consentFields,
+            isPreconsentAllowed = isPreconsentAllowed,
+            addedFields = addedFields
+        ).let { result ->
+            val isConsentGiven = result.first
+            val setupPreconsent = result.second
 
+            // throw exception if user canceled the Prompt
+            if (!result.first) {
+                throw UserCanceledPromptException()
+            }
+
+            // Preconsent Logic for when the preconsent is allowed
+            if (isPreconsentAllowed) when {
+                // If no preconsent exists and the user opted in to preconsent, create a new preconsent
+                existingPreconsent == null && setupPreconsent -> {
+                    Logger.i(TAG, "Creating a new preconsent")
+                    val newPreconsent = Preconsent(
+                        document = document,
+                        relyingParty = relyingParty,
+                        consentFields = consentFields,
+                    )
+                    preconsentStore.add(newPreconsent)
+                }
+                // If no preconsent exists and the user opted out of preconsent, do nothing
+                existingPreconsent == null && !setupPreconsent -> {
+                    Logger.i(TAG, "User opted out of preconsent. No preconsent created.")
+                }
+                // If a preconsent exists and the user opted in to update the preconsent, update the existing preconsent
+                existingPreconsent != null && setupPreconsent -> {
+                    Logger.i(TAG, "User opted in to update the existing preconsent. Updating the preconsent.")
+                    val updatedPreconsent = Preconsent(
+                        id = existingPreconsent.id,
+                        document = document,
+                        relyingParty = relyingParty,
+                        consentFields = consentFields,
+                    )
+                    preconsentStore.update(updatedPreconsent)
+                }
+                // If a preconsent exists but the user does not want to update it, remove the existing preconsent
+                existingPreconsent != null && !setupPreconsent -> {
+                    Logger.i(TAG, "User opted out of updating the existing preconsent. Removing the existing preconsent.")
+                    preconsentStore.delete(existingPreconsent.id)
+                }
+            }
         }
-    }
-
-    // TODO: enable preconsent if trusted
-    // TODO: show preconsent setup if not set up
-    // TODO: skip if preconsent and nothing changed
-    // always show the Consent Prompt first
-    showConsentPrompt(
-        activity = activity,
-        document = document,
-        relyingParty = relyingParty,
-        consentFields = consentFields,
-    ).let { resultSuccess ->
-        // throw exception if user canceled the Prompt
-        if (!resultSuccess){
-            throw UserCanceledPromptException()
-        }
+    } else {
+        Logger.i(TAG, "Skipping consent prompt and updating the existing preconsent")
+        // Update the existing preconsent with the provided data. We do this to ensure that the preconsent is up-to-date.
+        // At this moment the following invariants hold:
+        // - The party is trusted
+        // - The preconsent exists
+        // - The consent fields are a subset of the fields in the preconsent (or equal) [addedFields is empty => subset]
+        //   (If the fields are a strict subset, the new preconsent will contain less information than the existing one.
+        //    While this technically changes the shared information, it reduces it, i.e. less information is shared and thus no consent is required)
+        val updatedPreconsent = Preconsent(
+            id = existingPreconsent!!.id,
+            document = document,
+            relyingParty = relyingParty,
+            consentFields = consentFields,
+        )
+        preconsentStore.update(updatedPreconsent)
     }
 
     // initially null and updated when catching a KeyLockedException in the while-loop below
@@ -291,12 +333,14 @@ suspend fun showSdJwtPresentmentFlow(
         credential
     ) { keyUnlockData: KeyUnlockData? ->
         val sdJwt = SdJwtVerifiableCredential.fromString(
-            String(credential.issuerProvidedData, Charsets.US_ASCII))
+            String(credential.issuerProvidedData, Charsets.US_ASCII)
+        )
 
         val requestedAttributes = consentFields.map { (it as VcConsentField).claimName }.toSet()
         Logger.i(
             TAG, "Filtering requested attributes (${requestedAttributes.joinToString()}) " +
-                    "from disclosed attributes (${sdJwt.disclosures.joinToString { it.key }})")
+                    "from disclosed attributes (${sdJwt.disclosures.joinToString { it.key }})"
+        )
         val filteredSdJwt = sdJwt.discloseOnly(requestedAttributes)
         Logger.i(TAG, "Remaining disclosures: ${filteredSdJwt.disclosures.joinToString { it.key }}")
         if (filteredSdJwt.disclosures.isEmpty()) {
