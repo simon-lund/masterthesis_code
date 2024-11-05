@@ -19,6 +19,12 @@
     <string name="consent_modal_bottom_sheet_verifier_icon_description">Verifier Icon</string>
     <string name="consent_modal_bottom_sheet_data_element_icon_description">Data Element Icon</string>
     <string name="consent_modal_bottom_sheet_warning_icon_description">Warning Icon</string>
+    <string name="consent_modal_bottom_sheet_preconsent_not_allowed">Pre-Consent Not Allowed</string>
+    <string name="consent_modal_bottom_sheet_preconsent_not_allowed_description">Pre-Consent is not allowed for this transaction due to policy restrictions</string>
+    <string name="consent_modal_bottom_sheet_preconsent_new">Set up pre-consent for this transaction.</string>
+    <string name="consent_modal_bottom_sheet_preconsent_new_description">Pre-Consent allows you to share your data with this verifier without having to approve each request.</string>
+    <string name="consent_modal_bottom_sheet_preconsent_update">Update pre-consent for this transaction.</string>
+    <string name="consent_modal_bottom_sheet_preconsent_update_description">The requested data has changed since you last approved it. Please review the changes (highlighted fields in the list) and approve the updated request. If you do not approve, the previous pre-consent will be revoked.</string>
 
     <!-- PreconsentModalBottomSheet -->
     <string name="preconsent_modal_bottom_sheet_button_delete">Delete</string>

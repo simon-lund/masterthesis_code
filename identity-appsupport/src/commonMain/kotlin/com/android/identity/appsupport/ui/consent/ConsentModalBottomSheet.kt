@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.android.identity.appsupport.ui.getOutlinedImageVector
+import identitycredential.identity_appsupport.generated.resources.*
 import identitycredential.identity_appsupport.generated.resources.Res
 import identitycredential.identity_appsupport.generated.resources.consent_modal_bottom_sheet_button_cancel
 import identitycredential.identity_appsupport.generated.resources.consent_modal_bottom_sheet_button_more
@@ -79,7 +80,6 @@ fun ConsentModalBottomSheet(
     onConfirm: (setupPreConsent: Boolean) -> Unit,
     onCancel: () -> Unit = {}
 ) {
-    // TODO: implement preconsent
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
@@ -104,18 +104,19 @@ fun ConsentModalBottomSheet(
             ) {
                 RequestSection(
                     consentFields = consentFields,
-                    relyingParty = relyingParty
+                    relyingParty = relyingParty,
+                    addedFields = addedFields
                 )
             }
 
-            ButtonSection(scope, sheetState, onConfirm, onCancel, scrollState)
+            ButtonSection(scope, sheetState, onConfirm, onCancel, scrollState, isPreconsentAllowed, addedFields)
         }
     }
 }
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-public fun RelyingPartySection(relyingParty: ConsentRelyingParty) {
+fun RelyingPartySection(relyingParty: ConsentRelyingParty) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -159,7 +160,6 @@ public fun RelyingPartySection(relyingParty: ConsentRelyingParty) {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ButtonSection(
@@ -167,13 +167,12 @@ private fun ButtonSection(
     sheetState: SheetState,
     onConfirm: (setupPreConsent: Boolean) -> Unit,
     onCancel: () -> Unit,
-    scrollState: ScrollState
+    scrollState: ScrollState,
+    isPreconsentAllowed: Boolean = false,
+    addedFields: List<ConsentField> = emptyList()
 ) {
-    // TODO: show only if verifier is authenticated
-    // TODO: move to separate composable
+    // Checkbox state for setting up pre-consent
     var setupPreConsent by remember { mutableStateOf(false) }
-    // TODO: add state if outdated
-    // TODO: extension 1: hide if not all fields are approved for pre-consent
 
     Column(
         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -182,9 +181,36 @@ private fun ButtonSection(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(checked = setupPreConsent, onCheckedChange = { setupPreConsent = it })
-            // TODO: localize
-            Text("Set up pre-consent for this verifier.")
+            //  TODO: wrap in preconsent box with title and style properly
+            when {
+                !isPreconsentAllowed -> {
+                    Text(
+                        text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                isPreconsentAllowed && addedFields.isEmpty() -> {
+                    Checkbox(checked = setupPreConsent, onCheckedChange = { setupPreConsent = it })
+                    Column {
+                        Text(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_new))
+                        Text(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_new_description))
+                    }
+
+                }
+                isPreconsentAllowed && addedFields.isNotEmpty() -> {
+                    Checkbox(checked = setupPreConsent, onCheckedChange = { setupPreConsent = it })
+                    Column {
+                        Text(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_update))
+                        Text(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_update_description))
+                    }
+                }
+            }
         }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -228,7 +254,7 @@ private fun ButtonSection(
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-public fun DocumentSection(document: ConsentDocument) {
+fun DocumentSection(document: ConsentDocument) {
     Column(
         modifier = Modifier
             .padding(vertical = 2.dp)
@@ -276,7 +302,8 @@ public fun DocumentSection(document: ConsentDocument) {
 @Composable
 fun RequestSection(
     consentFields: List<ConsentField>,
-    relyingParty: ConsentRelyingParty
+    relyingParty: ConsentRelyingParty,
+    addedFields: List<ConsentField> = emptyList()
 ) {
     val useColumns = consentFields.size > 5
     val (storedFields, notStoredFields) = consentFields.partition {
@@ -315,7 +342,7 @@ fun RequestSection(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                DataElementGridView(notStoredFields, useColumns)
+                DataElementGridView(notStoredFields, useColumns, addedFields)
             }
             if (storedFields.size > 0) {
                 if (notStoredFields.size > 0) {
@@ -343,7 +370,7 @@ fun RequestSection(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                DataElementGridView(storedFields, useColumns)
+                DataElementGridView(storedFields, useColumns, addedFields)
             }
         }
     }
@@ -393,12 +420,13 @@ fun RequestSection(
 @Composable
 private fun DataElementGridView(
     consentFields: List<ConsentField>,
-    useColumns: Boolean
+    useColumns: Boolean,
+    addedFields: List<ConsentField> = emptyList()
 ) {
     if (!useColumns) {
         for (consentField in consentFields) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                DataElementView(consentField = consentField, modifier = Modifier.weight(1.0f))
+                DataElementView(consentField = consentField, modifier = Modifier.weight(1.0f), isAddedField = addedFields.contains(consentField))
             }
         }
     } else {
@@ -408,17 +436,18 @@ private fun DataElementGridView(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                DataElementView(consentField = consentFields[n], modifier = Modifier.weight(1.0f))
+                DataElementView(consentField = consentFields[n], modifier = Modifier.weight(1.0f), isAddedField = addedFields.contains(consentFields[n]))
                 DataElementView(
                     consentField = consentFields[n + 1],
-                    modifier = Modifier.weight(1.0f)
+                    modifier = Modifier.weight(1.0f),
+                    isAddedField = addedFields.contains(consentFields[n + 1])
                 )
             }
             n += 2
         }
         if (n < consentFields.size) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                DataElementView(consentField = consentFields[n], modifier = Modifier.weight(1.0f))
+                DataElementView(consentField = consentFields[n], modifier = Modifier.weight(1.0f), isAddedField = addedFields.contains(consentFields[n]))
             }
         }
     }
@@ -431,7 +460,14 @@ private fun DataElementGridView(
 private fun DataElementView(
     modifier: Modifier,
     consentField: ConsentField,
+    isAddedField: Boolean = false
 ) {
+    val modifier = if (isAddedField) {
+        modifier.background(MaterialTheme.colorScheme.secondaryContainer)
+    } else {
+        modifier
+    }
+
     Row(
         horizontalArrangement = Arrangement.Start,
         modifier = modifier.padding(8.dp),
