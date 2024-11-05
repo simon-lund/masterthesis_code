@@ -122,5 +122,4 @@ class PreconsentStore(
         // Update "cache" of preconsents.
         preconsents = preconsents.filter { it.id != preconsentId }
     }
-    // TODO: Implement lookup/check method.
 }
