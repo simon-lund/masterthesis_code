@@ -153,7 +153,9 @@ fun ConsentModalBottomSheetScreen(
                     showToast("The sheet was dismissed")
                     onSheetDismissed()
                 }
-            }
+            },
+            isPreconsentAllowed = true,
+            addedFields = consentFields.filterIndexed({ index, _ -> index % 2 == 0 }),
         )
     }
 }
