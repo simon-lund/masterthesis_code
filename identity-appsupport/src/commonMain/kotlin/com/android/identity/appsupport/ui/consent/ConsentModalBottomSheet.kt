@@ -1,8 +1,7 @@
 package com.android.identity.appsupport.ui.consent
 
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.focusGroup
+import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,9 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.*
@@ -83,6 +80,9 @@ fun ConsentModalBottomSheet(
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
+    // Checkbox state for setting up pre-consent
+    var setupPreConsent by remember { mutableStateOf(false) }
+
     ModalBottomSheet(
         onDismissRequest = { onCancel() },
         sheetState = sheetState,
@@ -108,8 +108,19 @@ fun ConsentModalBottomSheet(
                     addedFields = addedFields
                 )
             }
-
-            ButtonSection(scope, sheetState, onConfirm, onCancel, scrollState, isPreconsentAllowed, addedFields)
+            Spacer(modifier = Modifier.height(8.dp))
+            PreconsentArea(
+                state = setupPreConsent,
+                isPreconsentAllowed = isPreconsentAllowed,
+                addedFields = addedFields,
+                onChange = { setupPreConsent = it })
+            ButtonSection(
+                scope = scope,
+                sheetState = sheetState,
+                onConfirm = { onConfirm(setupPreConsent) },
+                onCancel = onCancel,
+                scrollState = scrollState
+            )
         }
     }
 }
@@ -160,58 +171,95 @@ fun RelyingPartySection(relyingParty: ConsentRelyingParty) {
     }
 }
 
+@Composable
+private fun PreconsentArea(
+    state: Boolean,
+    isPreconsentAllowed: Boolean = false,
+    addedFields: List<ConsentField> = emptyList(),
+    onChange: (Boolean) -> Unit = {}
+) {
+    @Composable
+    fun TextWithSubtext(text: String, subtext: String) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = subtext,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+
+    var modifier = Modifier
+        .fillMaxWidth()
+        .clip(shape = RoundedCornerShape(16.dp))
+        .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+    if (isPreconsentAllowed) {
+        modifier = modifier.clickable(
+            onClick = { onChange(!state) },
+            indication = ripple(),
+            interactionSource = remember { MutableInteractionSource() },
+        )
+    }
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            when {
+                isPreconsentAllowed && addedFields.isEmpty() -> {
+                    Checkbox(checked = state, onCheckedChange = onChange)
+                    TextWithSubtext(
+                        text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_new),
+                        subtext = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_new_description)
+                    )
+                }
+
+                isPreconsentAllowed && addedFields.isNotEmpty() -> {
+                    Checkbox(checked = state, onCheckedChange = onChange)
+                    TextWithSubtext(
+                        text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_update),
+                        subtext = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_update_description)
+                    )
+                }
+
+                else -> {
+                    Checkbox(checked = state, onCheckedChange = null)
+                    TextWithSubtext(
+                        text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed),
+                        subtext = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed_description)
+                    )
+                }
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ButtonSection(
     scope: CoroutineScope,
     sheetState: SheetState,
-    onConfirm: (setupPreConsent: Boolean) -> Unit,
+    onConfirm: () -> Unit,
     onCancel: () -> Unit,
     scrollState: ScrollState,
-    isPreconsentAllowed: Boolean = false,
-    addedFields: List<ConsentField> = emptyList()
 ) {
-    // Checkbox state for setting up pre-consent
-    var setupPreConsent by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            //  TODO: wrap in preconsent box with title and style properly
-            when {
-                !isPreconsentAllowed -> {
-                    Text(
-                        text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed_description),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                isPreconsentAllowed && addedFields.isEmpty() -> {
-                    Checkbox(checked = setupPreConsent, onCheckedChange = { setupPreConsent = it })
-                    Column {
-                        Text(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_new))
-                        Text(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_new_description))
-                    }
-
-                }
-                isPreconsentAllowed && addedFields.isNotEmpty() -> {
-                    Checkbox(checked = setupPreConsent, onCheckedChange = { setupPreConsent = it })
-                    Column {
-                        Text(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_update))
-                        Text(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_update_description))
-                    }
-                }
-            }
-        }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
@@ -228,7 +276,7 @@ private fun ButtonSection(
             Button(
                 onClick = {
                     if (!scrollState.canScrollForward) {
-                        onConfirm(setupPreConsent)
+                        onConfirm()
                     } else {
                         scope.launch {
                             val step = (scrollState.viewportSize * 0.9).toInt()
@@ -408,7 +456,7 @@ fun RequestSection(
     }
     if (relyingParty.trustPoint == null) {
         Box(
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 0.dp)
         ) {
             WarningCard(
                 stringResource(Res.string.consent_modal_bottom_sheet_warning_verifier_not_in_trust_list)
@@ -426,7 +474,11 @@ private fun DataElementGridView(
     if (!useColumns) {
         for (consentField in consentFields) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                DataElementView(consentField = consentField, modifier = Modifier.weight(1.0f), isAddedField = addedFields.contains(consentField))
+                DataElementView(
+                    consentField = consentField,
+                    modifier = Modifier.weight(1.0f),
+                    isAddedField = addedFields.contains(consentField)
+                )
             }
         }
     } else {
@@ -436,7 +488,11 @@ private fun DataElementGridView(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                DataElementView(consentField = consentFields[n], modifier = Modifier.weight(1.0f), isAddedField = addedFields.contains(consentFields[n]))
+                DataElementView(
+                    consentField = consentFields[n],
+                    modifier = Modifier.weight(1.0f),
+                    isAddedField = addedFields.contains(consentFields[n])
+                )
                 DataElementView(
                     consentField = consentFields[n + 1],
                     modifier = Modifier.weight(1.0f),
@@ -447,7 +503,11 @@ private fun DataElementGridView(
         }
         if (n < consentFields.size) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                DataElementView(consentField = consentFields[n], modifier = Modifier.weight(1.0f), isAddedField = addedFields.contains(consentFields[n]))
+                DataElementView(
+                    consentField = consentFields[n],
+                    modifier = Modifier.weight(1.0f),
+                    isAddedField = addedFields.contains(consentFields[n])
+                )
             }
         }
     }
@@ -462,30 +522,38 @@ private fun DataElementView(
     consentField: ConsentField,
     isAddedField: Boolean = false
 ) {
-    val modifier = if (isAddedField) {
-        modifier.background(MaterialTheme.colorScheme.secondaryContainer)
+    val _modifier = if (isAddedField) {
+        modifier.background(Color(0xffFFEE8C))
     } else {
         modifier
     }
 
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
-        modifier = modifier.padding(8.dp),
+        modifier = _modifier.padding(8.dp)
     ) {
         if (consentField.attribute?.icon != null) {
             Icon(
-                consentField.attribute!!.icon!!.getOutlinedImageVector(),
-                contentDescription = stringResource(Res.string.consent_modal_bottom_sheet_data_element_icon_description)
+                imageVector = consentField.attribute!!.icon!!.getOutlinedImageVector(),
+                contentDescription = stringResource(Res.string.consent_modal_bottom_sheet_data_element_icon_description),
+                tint = if (isAddedField) Color.Black else MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
         Text(
             text = consentField.displayName,
             fontWeight = FontWeight.Normal,
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
+            color = if (isAddedField) {
+                Color.Black
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
         )
     }
 }
+
 
 @Composable
 private fun WarningCard(text: String) {
