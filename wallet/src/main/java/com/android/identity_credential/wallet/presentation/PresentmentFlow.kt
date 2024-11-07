@@ -77,8 +77,10 @@ private suspend fun showPresentmentFlowImpl(
     // Check if the consent prompt can be skipped
     val skipConsentPrompt = isRelyingPartyTrusted && existingPreconsent != null && addedFields.isEmpty()
     if (!skipConsentPrompt) {
-        // TODO: extend this to check whether one of the consent fields are not enabled for preconsent, in that case do not allow preconsent
-        val isPreconsentAllowed = isRelyingPartyTrusted
+        // Check if preconsent is allowed by all fields and if relying party is trusted,
+        //  if, only if, all conditions are met, the preconsent is allowed
+        val isPreconsentAllowedByFields = consentFields.all { it.attribute?.preconsentAllowed == true }
+        val isPreconsentAllowed = isRelyingPartyTrusted && isPreconsentAllowedByFields
 
         // show consent prompt
         showConsentPrompt(
