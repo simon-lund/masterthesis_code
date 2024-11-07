@@ -42,6 +42,7 @@ class VcDocumentType private constructor(
          * @param description a description of the claim.
          * @param icon the icon, if available.
          * @param sampleValue a sample value for the attribute, if available.
+         * @param preconsentAllowed whether this attribute can be preconsented to.
          */
         fun addClaim(
             type: DocumentAttributeType,
@@ -49,10 +50,11 @@ class VcDocumentType private constructor(
             displayName: String,
             description: String,
             icon: Icon? = null,
-            sampleValue: DataItem? = null
+            sampleValue: DataItem? = null,
+            preconsentAllowed: Boolean = false
         ) = apply {
             claims[identifier] = DocumentAttribute(
-                type, identifier, displayName, description, icon, sampleValue
+                type, identifier, displayName, description, icon, sampleValue, preconsentAllowed
             )
         }
 

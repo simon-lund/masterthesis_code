@@ -49,6 +49,7 @@ class MdocDocumentType private constructor(
          * @param mandatory indication whether the mDoc attribute is mandatory.
          * @param icon the icon, if available.
          * @param sampleValue a sample value for the attribute, if available.
+         * @param preconsentAllowed whether this attribute can be preconsented to.
          */
         fun addDataElement(
             namespace: String,
@@ -59,6 +60,7 @@ class MdocDocumentType private constructor(
             mandatory: Boolean,
             icon: Icon? = null,
             sampleValue: DataItem? = null,
+            preconsentAllowed: Boolean = false
         ) = apply {
             if (!namespaces.containsKey(namespace)) {
                 namespaces[namespace] = MdocNamespace.Builder(namespace)
@@ -70,7 +72,8 @@ class MdocDocumentType private constructor(
                 description,
                 mandatory,
                 icon,
-                sampleValue
+                sampleValue,
+                preconsentAllowed
             )
         }
 

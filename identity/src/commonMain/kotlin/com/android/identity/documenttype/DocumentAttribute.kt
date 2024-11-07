@@ -28,6 +28,7 @@ import com.android.identity.cbor.DataItem
  * @param description a description of the attribute.
  * @param icon the icon for the attribute, if available.
  * @param sampleValue a sample value for the attribute, if available.
+ * @param preconsentAllowed whether this attribute can be preconsented to.
  */
 class DocumentAttribute(
     val type: DocumentAttributeType,
@@ -35,7 +36,8 @@ class DocumentAttribute(
     val displayName: String,
     val description: String,
     val icon: Icon?,
-    val sampleValue: DataItem?
+    val sampleValue: DataItem?,
+    val preconsentAllowed: Boolean = false
 ) {
     /**
      * Converts the attribute to a [DataItem].
@@ -46,6 +48,7 @@ class DocumentAttribute(
             put("identifier", identifier)
             put("displayName", displayName)
             put("description", description)
+            put("preconsentAllowed", preconsentAllowed)
             icon?.let { put("icon", it.name) }
             sampleValue?.let { put("sampleValue", it) }
         }.end().build()
@@ -64,7 +67,8 @@ class DocumentAttribute(
                 displayName = dataItem["displayName"].asTstr,
                 description = dataItem["description"].asTstr,
                 icon = dataItem.getOrNull("iconName")?.let { Icon.valueOf(it.asTstr) },
-                sampleValue = dataItem.getOrNull("sampleValue")
+                sampleValue = dataItem.getOrNull("sampleValue"),
+                preconsentAllowed = dataItem["preconsentAllowed"].asBoolean
             )
         }
     }

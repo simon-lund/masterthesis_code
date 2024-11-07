@@ -87,6 +87,7 @@ class DocumentType private constructor(
          * @param mdocNamespace the namespace of the mDoc attribute.
          * @param icon the icon, if available.
          * @param sampleValue a sample value for the attribute, if available.
+         * @param preconsentAllowed whether this attribute can be preconsented to.
          */
         fun addAttribute(
             type: DocumentAttributeType,
@@ -97,10 +98,11 @@ class DocumentType private constructor(
             mdocNamespace: String,
             icon: Icon? = null,
             sampleValue: DataItem? = null,
+            preconsentAllowed: Boolean = false
         ) = apply {
             addMdocAttribute(type, identifier, displayName, description, mandatory,
-                mdocNamespace, icon, sampleValue)
-            addVcAttribute(type, identifier, displayName, description, icon, sampleValue)
+                mdocNamespace, icon, sampleValue, preconsentAllowed)
+            addVcAttribute(type, identifier, displayName, description, icon, sampleValue, preconsentAllowed)
         }
 
         /**
@@ -115,6 +117,7 @@ class DocumentType private constructor(
          * @param mdocNamespace the namespace of the mDoc attribute.
          * @param icon the icon, if available.
          * @param sampleValue a sample value for the attribute, if available.
+         * @param preconsentAllowed whether this attribute can be preconsented to.
          */
         fun addAttribute(
             type: DocumentAttributeType,
@@ -125,7 +128,8 @@ class DocumentType private constructor(
             mandatory: Boolean,
             mdocNamespace: String,
             icon: Icon? = null,
-            sampleValue: DataItem? = null
+            sampleValue: DataItem? = null,
+            preconsentAllowed: Boolean = false
         ) = apply {
             addMdocAttribute(
                 type,
@@ -135,9 +139,10 @@ class DocumentType private constructor(
                 mandatory,
                 mdocNamespace,
                 icon,
-                sampleValue
+                sampleValue,
+                preconsentAllowed
             )
-            addVcAttribute(type, vcIdentifier, displayName, description, icon, sampleValue)
+            addVcAttribute(type, vcIdentifier, displayName, description, icon, sampleValue, preconsentAllowed)
         }
 
         /**
@@ -151,6 +156,7 @@ class DocumentType private constructor(
          * @param mdocNamespace the namespace of the mDoc attribute.
          * @param icon the icon, if available.
          * @param sampleValue a sample value for the attribute, if available.
+         * @param preconsentAllowed whether this attribute can be preconsented to.
          */
         fun addMdocAttribute(
             type: DocumentAttributeType,
@@ -160,7 +166,8 @@ class DocumentType private constructor(
             mandatory: Boolean,
             mdocNamespace: String,
             icon: Icon? = null,
-            sampleValue: DataItem? = null
+            sampleValue: DataItem? = null,
+            preconsentAllowed: Boolean = false
         ) = apply {
             mdocBuilder?.addDataElement(
                 mdocNamespace,
@@ -170,7 +177,8 @@ class DocumentType private constructor(
                 description,
                 mandatory,
                 icon,
-                sampleValue
+                sampleValue,
+                preconsentAllowed
             ) ?: throw Exception("The mDoc Document Type was not initialized")
         }
 
@@ -183,6 +191,7 @@ class DocumentType private constructor(
          * @param description a description of the attribute.
          * @param icon the icon, if available.
          * @param sampleValue a sample value for the attribute, if available.
+         * @param preconsentAllowed whether this attribute can be preconsented to.
          */
         fun addVcAttribute(
             type: DocumentAttributeType,
@@ -190,9 +199,10 @@ class DocumentType private constructor(
             displayName: String,
             description: String,
             icon: Icon? = null,
-            sampleValue: DataItem? = null
+            sampleValue: DataItem? = null,
+            preconsentAllowed: Boolean = false
         ) = apply {
-            vcBuilder?.addClaim(type, identifier, displayName, description, icon, sampleValue)
+            vcBuilder?.addClaim(type, identifier, displayName, description, icon, sampleValue, preconsentAllowed)
                 ?: throw Exception("The VC Document Type was not initialized")
         }
 
