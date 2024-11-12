@@ -237,7 +237,6 @@ private fun PreconsentArea(
                 }
 
                 else -> {
-                    Checkbox(checked = state, onCheckedChange = null)
                     TextWithSubtext(
                         text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed),
                         subtext = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed_description)
