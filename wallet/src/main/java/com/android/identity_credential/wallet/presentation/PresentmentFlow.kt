@@ -7,7 +7,9 @@ import com.android.identity.android.securearea.UserAuthenticationType
 import com.android.identity.android.securearea.cloud.CloudKeyLockedException
 import com.android.identity.android.securearea.cloud.CloudKeyUnlockData
 import com.android.identity.android.securearea.cloud.CloudSecureArea
-import com.android.identity.appsupport.ui.consent.ConsentDocument
+import com.android.identity.appsupport.ui.consent.*
+import com.android.identity.appsupport.ui.preconsent.Preconsent
+import com.android.identity.appsupport.ui.preconsent.PreconsentStore
 import com.android.identity.cbor.Cbor
 import com.android.identity.credential.Credential
 import com.android.identity.credential.SecureAreaBoundCredential
@@ -26,17 +28,10 @@ import com.android.identity.securearea.KeyUnlockData
 import com.android.identity.securearea.software.SoftwareKeyInfo
 import com.android.identity.securearea.software.SoftwareKeyUnlockData
 import com.android.identity.securearea.software.SoftwareSecureArea
-import com.android.identity.trustmanagement.TrustPoint
 import com.android.identity.util.Logger
 import com.android.identity_credential.wallet.R
 import com.android.identity_credential.wallet.WalletApplication
 import com.android.identity_credential.wallet.ui.prompt.biometric.showBiometricPrompt
-import com.android.identity.appsupport.ui.consent.ConsentField
-import com.android.identity.appsupport.ui.consent.ConsentRelyingParty
-import com.android.identity.appsupport.ui.consent.MdocConsentField
-import com.android.identity.appsupport.ui.consent.VcConsentField
-import com.android.identity.appsupport.ui.preconsent.Preconsent
-import com.android.identity.appsupport.ui.preconsent.PreconsentStore
 import com.android.identity_credential.wallet.ui.prompt.consent.showConsentPrompt
 import com.android.identity_credential.wallet.ui.prompt.passphrase.showPassphrasePrompt
 
