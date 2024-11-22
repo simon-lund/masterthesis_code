@@ -89,7 +89,7 @@
     <!-- Preconsent screen -->
     <string name="preconsent_screen_title">Pre-Consents</string>
     <string name="preconsent_screen_no_preconsents">No pre-consents set up.</string>
-    <string name="preconsent_screen_info">Pre-consents are agreements with verifiers to share specific data of a document without explicit user consent. Click on a pre-consent to view and optionally delete it.</string>
+    <string name="preconsent_screen_info">Pre-consents allow you to save consents and skip the consent dialog when sharing data repeatedly with the same verifier. Click on a pre-consent to view and optionally delete it.</string>
 
     <!-- Reader screens -->
     <string name="reader_screen_title">Identity Reader</string>
