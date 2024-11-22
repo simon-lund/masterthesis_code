@@ -154,8 +154,9 @@ fun ConsentModalBottomSheetScreen(
                     onSheetDismissed()
                 }
             },
+            preconsentEnabled = true,
             isPreconsentAllowed = true,
-            addedFields = consentFields.filterIndexed({ index, _ -> index % 2 == 0 }),
+            addedFields = consentFields.filterIndexed({ index, _ -> index % 3 == 0 }),
         )
     }
 }
