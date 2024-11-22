@@ -21,9 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -183,7 +181,7 @@ private fun PreconsentArea(
     onChange: (Boolean) -> Unit = {}
 ) {
     @Composable
-    fun TextWithSubtext(text: String, subtext: String) {
+    fun TextWithSubtext(text:String, subtext: AnnotatedString) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -228,7 +226,7 @@ private fun PreconsentArea(
                     Checkbox(checked = state, onCheckedChange = onChange)
                     TextWithSubtext(
                         text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_new),
-                        subtext = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_new_description)
+                        subtext = AnnotatedString.fromHtml(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_new_description))
                     )
                 }
 
@@ -236,14 +234,13 @@ private fun PreconsentArea(
                     Checkbox(checked = state, onCheckedChange = onChange)
                     TextWithSubtext(
                         text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_update),
-                        subtext = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_update_description)
+                        subtext = AnnotatedString.fromHtml(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_update_description))
                     )
                 }
-
                 else -> {
                     TextWithSubtext(
                         text = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed),
-                        subtext = stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed_description)
+                        subtext = AnnotatedString.fromHtml(stringResource(Res.string.consent_modal_bottom_sheet_preconsent_not_allowed_description))
                     )
                 }
             }

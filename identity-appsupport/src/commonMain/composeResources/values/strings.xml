@@ -24,7 +24,7 @@
     <string name="consent_modal_bottom_sheet_preconsent_new">Set up Pre-Consent</string>
     <string name="consent_modal_bottom_sheet_preconsent_new_description">You can set up pre-consent for this transaction, so you don't have to approve it in the future.</string>
     <string name="consent_modal_bottom_sheet_preconsent_update">Update Pre-Consent</string>
-    <string name="consent_modal_bottom_sheet_preconsent_update_description">The requested data has changed since you last approved it. Please review the add fields (highlighted in the list). If you do not approve, the previous pre-consent will be revoked.</string>
+    <string name="consent_modal_bottom_sheet_preconsent_update_description">The &lt;b>ORANGE HIGHLIGHTED&lt;/b> fields have no pre-consent set up. Please review the fields before updating your pre-consent with them.</string>
 
     <!-- PreconsentModalBottomSheet -->
     <string name="preconsent_modal_bottom_sheet_button_delete">Delete</string>
