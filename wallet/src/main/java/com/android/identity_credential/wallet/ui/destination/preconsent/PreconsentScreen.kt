@@ -40,7 +40,7 @@ fun PreconsentScreen(
     ScreenWithAppBarAndBackButton(
         title = stringResource(id = R.string.preconsent_screen_title),
         onBackButtonClick = { onNavigate(WalletDestination.PopBackStack.route) },
-        scrollable = true
+        scrollable = false
     ) {
         if (preconsents.isEmpty()) {
             Box(
@@ -53,20 +53,24 @@ fun PreconsentScreen(
                 )
             }
         } else {
-            Row {
-                Text(
-                    text = stringResource(id = R.string.preconsent_screen_info),
-                    modifier = Modifier.padding(16.dp),
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            PreconsentList(preconsents = preconsents, onPreconsentClick = {
-                scope.launch {
-                    currentPreconsent = it
-                    sheetState.show()
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Top,
+            ) {
+                Row {
+                    Text(
+                        text = stringResource(id = R.string.preconsent_screen_info),
+                        modifier = Modifier.padding(16.dp),
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
                 }
-            })
+                Spacer(modifier = Modifier.height(8.dp))
+                PreconsentList(preconsents = preconsents, onPreconsentClick = {
+                    scope.launch {
+                        currentPreconsent = it
+                        sheetState.show()
+                    }
+                })
             if (sheetState.isVisible && currentPreconsent != null) {
                 PreconsentBottomSheet(
                     preconsent = currentPreconsent!!,
@@ -79,6 +83,7 @@ fun PreconsentScreen(
                         }
                     }
                 )
+            }
             }
         }
     }
