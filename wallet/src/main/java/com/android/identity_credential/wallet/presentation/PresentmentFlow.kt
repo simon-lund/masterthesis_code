@@ -156,7 +156,7 @@ private suspend fun showPresentmentFlowImpl(
 
     // End the timer to measure the time taken to complete the presentment flow
     val endTime = System.currentTimeMillis()
-    Logger.i(TAG, "Time taken to complete the presentment flow: ${endTime - startTime} ms, preconsentEnabled: ${preconsentEnabled}, cosentSkipped: $skipConsentPrompt")
+    Logger.i(TAG, "Time taken to complete the presentment flow: ${endTime - startTime} ms, preconsentEnabled: ${preconsentEnabled}, consentSkipped: $skipConsentPrompt")
 
     // initially null and updated when catching a KeyLockedException in the while-loop below
     var keyUnlockData: KeyUnlockData? = null
