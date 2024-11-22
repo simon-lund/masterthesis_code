@@ -95,11 +95,11 @@ private suspend fun showPresentmentFlowImpl(
             val setupPreconsent = result.second
 
             // throw exception if user canceled the Prompt
-            if (!result.first) {
+            if (!isConsentGiven) {
                 throw UserCanceledPromptException()
             }
 
-            // Preconsent Logic for when the preconsent is allowed
+            // Preconsent logic for when the preconsent is allowed
             if (isPreconsentAllowed) when {
                 // If no preconsent exists and the user opted in to preconsent, create a new preconsent
                 existingPreconsent == null && setupPreconsent -> {
@@ -118,37 +118,33 @@ private suspend fun showPresentmentFlowImpl(
                 // If a preconsent exists and the user opted in to update the preconsent, update the existing preconsent
                 existingPreconsent != null && setupPreconsent -> {
                     Logger.i(TAG, "User opted in to update the existing preconsent. Updating the preconsent.")
+                    // We update the existing preconsent with the union of the old and the added fields.
+                    val updatedConsentFields = existingPreconsent.consentFields.toMutableList()
+                    updatedConsentFields.addAll(addedFields)
+
                     val updatedPreconsent = Preconsent(
                         id = existingPreconsent.id,
                         document = document,
                         relyingParty = relyingParty,
-                        consentFields = consentFields,
+                        consentFields = updatedConsentFields,
                     )
                     preconsentStore.update(updatedPreconsent)
                 }
-                // If a preconsent exists but the user does not want to update it, remove the existing preconsent
+                // If a preconsent exists but the user does not want to update it, do nothing
+                // Why not remove the preconsent? Because the user may have added the preconsent for a different transaction which requires less data fields and the current transaction requires more data fields but the user does not want to update the preconsent.
                 existingPreconsent != null && !setupPreconsent -> {
-                    Logger.i(TAG, "User opted out of updating the existing preconsent. Removing the existing preconsent.")
-                    preconsentStore.delete(existingPreconsent.id)
+                    Logger.i(TAG, "User opted out of updating the existing preconsent. Pre-Cosent will not be updated.")
+                   // preconsentStore.delete(existingPreconsent.id)
                 }
             }
         }
     } else {
-        Logger.i(TAG, "Skipping consent prompt and updating the existing preconsent")
-        // Update the existing preconsent with the provided data. We do this to ensure that the preconsent is up-to-date.
+        // If a valid preconsent exists and the relying party is trusted, skip the consent prompt
         // At this moment the following invariants hold:
         // - The party is trusted
         // - The preconsent exists
-        // - The consent fields are a subset of the fields in the preconsent (or equal) [addedFields is empty => subset]
-        //   (If the fields are a strict subset, the new preconsent will contain less information than the existing one.
-        //    While this technically changes the shared information, it reduces it, i.e. less information is shared and thus no consent is required)
-        val updatedPreconsent = Preconsent(
-            id = existingPreconsent!!.id,
-            document = document,
-            relyingParty = relyingParty,
-            consentFields = consentFields,
-        )
-        preconsentStore.update(updatedPreconsent)
+        // - The consent fields are a subset of the fields in the preconsent (or equal) [i.e. addedFields is empty => subset]
+        Logger.i(TAG, "Skipping consent prompt")
     }
 
     // initially null and updated when catching a KeyLockedException in the while-loop below
