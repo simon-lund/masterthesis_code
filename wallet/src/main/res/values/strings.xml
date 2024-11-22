@@ -62,7 +62,7 @@
     <string name="wallet_drawer_title">Wallet</string>
     <string name="wallet_drawer_add">Add to Wallet</string>
     <string name="wallet_drawer_settings">Settings</string>
-    <string name="wallet_drawer_preconsents">Preconsents</string>
+    <string name="wallet_drawer_preconsents">Pre-Consents</string>
     <string name="wallet_drawer_identity_reader">Identity Reader</string>
     <string name="wallet_drawer_about">About Wallet</string>
 
@@ -87,9 +87,9 @@
     <string name="about_screen_title">About Wallet</string>
 
     <!-- Preconsent screen -->
-    <string name="preconsent_screen_title">Preconsents</string>
-    <string name="preconsent_screen_no_preconsents">No preconsents set up.</string>
-    <string name="preconsent_screen_info">Preconsents are agreements with verifiers to share specific data of a document without explicit user consent. Click on a preconsent to view and optionally delete it.</string>
+    <string name="preconsent_screen_title">Pre-Consents</string>
+    <string name="preconsent_screen_no_preconsents">No pre-consents set up.</string>
+    <string name="preconsent_screen_info">Pre-consents are agreements with verifiers to share specific data of a document without explicit user consent. Click on a pre-consent to view and optionally delete it.</string>
 
     <!-- Reader screens -->
     <string name="reader_screen_title">Identity Reader</string>
@@ -137,9 +137,9 @@
     <string name="settings_screen_dev_mode_title">Developer Mode</string>
     <string name="settings_screen_dev_mode_subtitle_on">Additional functionality for developers is enabled</string>
     <string name="settings_screen_dev_mode_subtitle_off">Additional functionality for developers not enabled</string>
-    <string name="settings_screen_preconsent_enabled_title">Enable Preconsent</string>
-    <string name="settings_screen_preconsent_enabled_subtitle_on">Preconsent is enabled</string>
-    <string name="settings_screen_preconsent_enabled_subtitle_off">Preconsent is disabled</string>
+    <string name="settings_screen_preconsent_enabled_title">Enable Pre-consent</string>
+    <string name="settings_screen_preconsent_enabled_subtitle_on">Pre-consent is enabled</string>
+    <string name="settings_screen_preconsent_enabled_subtitle_off">Pre-consent is disabled</string>
     <string name="settings_screen_log_to_file_title">Logging</string>
     <string name="settings_screen_log_to_file_subtitle_on">Diagnostic messages are being logged</string>
     <string name="settings_screen_log_to_file_subtitle_off">Diagnostic messages are not being logged</string>
