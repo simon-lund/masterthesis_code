@@ -30,7 +30,7 @@ fun PreconsentScreen(
     onNavigate: (String) -> Unit,
 ) {
     val preconsentStore = remember { PreconsentStore.getInstance() }
-    val preconsents = preconsentStore.preconsents
+    var preconsents by remember { mutableStateOf(preconsentStore.preconsents) }
     var currentPreconsent by remember { mutableStateOf<Preconsent?>(null) }
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(
@@ -64,7 +64,7 @@ fun PreconsentScreen(
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 PreconsentList(preconsents = preconsents, onPreconsentClick = {
                     scope.launch {
                         currentPreconsent = it
@@ -79,6 +79,7 @@ fun PreconsentScreen(
                         scope.launch {
                             sheetState.hide()
                             preconsentStore.delete(id)
+                            preconsents = preconsents.filter { it.id != id }
                             currentPreconsent = null
                         }
                     }
