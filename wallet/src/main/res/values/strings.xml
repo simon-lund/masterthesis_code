@@ -137,6 +137,9 @@
     <string name="settings_screen_dev_mode_title">Developer Mode</string>
     <string name="settings_screen_dev_mode_subtitle_on">Additional functionality for developers is enabled</string>
     <string name="settings_screen_dev_mode_subtitle_off">Additional functionality for developers not enabled</string>
+    <string name="settings_screen_preconsent_enabled_title">Enable Preconsent</string>
+    <string name="settings_screen_preconsent_enabled_subtitle_on">Preconsent is enabled</string>
+    <string name="settings_screen_preconsent_enabled_subtitle_off">Preconsent is disabled</string>
     <string name="settings_screen_log_to_file_title">Logging</string>
     <string name="settings_screen_log_to_file_subtitle_on">Diagnostic messages are being logged</string>
     <string name="settings_screen_log_to_file_subtitle_off">Diagnostic messages are not being logged</string>

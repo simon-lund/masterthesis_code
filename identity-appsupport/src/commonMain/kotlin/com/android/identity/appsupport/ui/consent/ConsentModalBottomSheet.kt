@@ -59,6 +59,7 @@ import kotlin.math.min
  * @param consentFields the list of consent fields to show.
  * @param document details about the document being presented.
  * @param relyingParty a structure for conveying who is asking for the information.
+ * @param preconsentEnabled whether pre-consent mechanism is enabled.
  * @param isPreconsentAllowed whether a user can set up pre-consent.
  * @param addedFields if not empty, a pre-consent exists but the relying party additionally requires the listed fields.
  * These fields are highlighted in the list of fields in the consent form. (Invariant: if not empty, [isPreconsentAllowed] must be true)
@@ -72,6 +73,7 @@ fun ConsentModalBottomSheet(
     consentFields: List<ConsentField>,
     document: ConsentDocument,
     relyingParty: ConsentRelyingParty,
+    preconsentEnabled: Boolean,
     isPreconsentAllowed: Boolean,
     addedFields: List<ConsentField>,
     onConfirm: (setupPreConsent: Boolean) -> Unit,
@@ -105,15 +107,17 @@ fun ConsentModalBottomSheet(
                 RequestSection(
                     consentFields = consentFields,
                     relyingParty = relyingParty,
-                    addedFields = addedFields
+                    addedFields = if (preconsentEnabled) addedFields else emptyList()
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            PreconsentArea(
-                state = setupPreConsent,
-                isPreconsentAllowed = isPreconsentAllowed,
-                addedFields = addedFields,
-                onChange = { setupPreConsent = it })
+            if (preconsentEnabled) {
+                Spacer(modifier = Modifier.height(8.dp))
+                PreconsentArea(
+                    state = setupPreConsent,
+                    isPreconsentAllowed = isPreconsentAllowed,
+                    addedFields = addedFields,
+                    onChange = { setupPreConsent = it })
+            }
             ButtonSection(
                 scope = scope,
                 sheetState = sheetState,

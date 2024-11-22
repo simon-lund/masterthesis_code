@@ -182,6 +182,13 @@ fun SettingsScreen(
                     isChecked = settingsModel.developerModeEnabled.observeAsState(false).value,
                     onCheckedChange = { settingsModel.developerModeEnabled.value = it }
                 )
+                SettingToggle(
+                    title = stringResource(R.string.settings_screen_preconsent_enabled_title),
+                    subtitleOn = stringResource(R.string.settings_screen_preconsent_enabled_subtitle_on),
+                    subtitleOff = stringResource(R.string.settings_screen_preconsent_enabled_subtitle_off),
+                    isChecked = settingsModel.preconsentEnabled.observeAsState(false).value,
+                    onCheckedChange = { settingsModel.preconsentEnabled.value = it }
+                )
             }
             SettingToggle(
                 title = stringResource(R.string.settings_screen_log_to_file_title),

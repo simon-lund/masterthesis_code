@@ -20,6 +20,7 @@ class SettingsModel(
     private val sharedPreferences: SharedPreferences
 ) {
     // Settings that are visible in the Settings screen
+    val preconsentEnabled = MutableLiveData(false)
     val developerModeEnabled = MutableLiveData(false)
     val loggingEnabled = MutableLiveData(false)
     val activityLoggingEnabled = MutableLiveData(false)
@@ -36,6 +37,7 @@ class SettingsModel(
 
     companion object {
         private const val TAG = "SettingsModel"
+        private const val PRECONSENT_ENABLED = "preconsent_enabled"
         private const val PREFERENCE_DEVELOPER_MODE_ENABLED = "developer_mode_enabled"
         private const val PREFERENCE_LOGGING_ENABLED = "logging_enabled"
         private const val PREFERENCE_ACTIVITY_LOGGING_ENABLED = "activity_logging_enabled"
@@ -56,6 +58,12 @@ class SettingsModel(
     private val logFile = Path(logDir, LOG_FILE_NAME)
 
     init {
+        preconsentEnabled.value =
+            sharedPreferences.getBoolean(PRECONSENT_ENABLED, false)
+        preconsentEnabled.observeForever { value ->
+            sharedPreferences.edit { putBoolean(PRECONSENT_ENABLED, value) }
+        }
+
         developerModeEnabled.value =
             sharedPreferences.getBoolean(PREFERENCE_DEVELOPER_MODE_ENABLED, false)
         developerModeEnabled.observeForever { value ->

@@ -30,6 +30,7 @@ suspend fun showConsentPrompt(
     document: ConsentDocument,
     relyingParty: ConsentRelyingParty,
     consentFields: List<ConsentField>,
+    preconsentEnabled: Boolean,
     isPreconsentAllowed: Boolean,
     addedFields: List<ConsentField>
 ): Pair<Boolean, Boolean> =
@@ -39,6 +40,7 @@ suspend fun showConsentPrompt(
             consentFields = consentFields,
             document = document,
             relyingParty = relyingParty,
+            preconsentEnabled = preconsentEnabled,
             isPreconsentAllowed = isPreconsentAllowed,
             addedFields = addedFields,
             onConsentPromptResult = continuation::resume
@@ -58,6 +60,7 @@ class ConsentPrompt(
     private val consentFields: List<ConsentField>,
     private val document: ConsentDocument,
     private val relyingParty: ConsentRelyingParty,
+    private val preconsentEnabled: Boolean,
     private val isPreconsentAllowed: Boolean,
     private val addedFields: List<ConsentField>,
     // First is consent, second is pre-consent
@@ -90,6 +93,7 @@ class ConsentPrompt(
                         consentFields = consentFields,
                         document = document,
                         relyingParty = relyingParty,
+                        preconsentEnabled = preconsentEnabled,
                         isPreconsentAllowed = isPreconsentAllowed,
                         addedFields = addedFields,
                         // user accepted to send requested credential data
