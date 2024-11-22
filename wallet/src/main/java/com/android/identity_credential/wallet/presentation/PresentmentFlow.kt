@@ -52,7 +52,14 @@ private suspend fun showPresentmentFlowImpl(
 ): ByteArray {
     val preconsentStore = PreconsentStore.getInstance()
 
+    // Start the timer to measure the time taken to complete the presentment flow
+    val startTime = System.currentTimeMillis()
+
     // *** Preconsent Logic ***
+    // TODO: Get the preconsentEnabled value from the settings and remove the hardcoded value
+    //  if enabled ui should show preconsent area, otherwise it should not
+    val preconsentEnabled = true
+
     // Check if the relying party is trusted
     val isRelyingPartyTrusted = relyingParty.trustPoint != null
 
@@ -146,6 +153,10 @@ private suspend fun showPresentmentFlowImpl(
         // - The consent fields are a subset of the fields in the preconsent (or equal) [i.e. addedFields is empty => subset]
         Logger.i(TAG, "Skipping consent prompt")
     }
+
+    // End the timer to measure the time taken to complete the presentment flow
+    val endTime = System.currentTimeMillis()
+    Logger.i(TAG, "Time taken to complete the presentment flow: ${endTime - startTime} ms, preconsentEnabled: ${preconsentEnabled}, cosentSkipped: $skipConsentPrompt")
 
     // initially null and updated when catching a KeyLockedException in the while-loop below
     var keyUnlockData: KeyUnlockData? = null
