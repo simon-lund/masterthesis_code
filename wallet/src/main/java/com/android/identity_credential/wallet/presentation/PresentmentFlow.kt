@@ -29,6 +29,7 @@ import com.android.identity.securearea.software.SoftwareSecureArea
 import com.android.identity.trustmanagement.TrustPoint
 import com.android.identity.util.Logger
 import com.android.identity_credential.wallet.R
+import com.android.identity_credential.wallet.WalletApplication
 import com.android.identity_credential.wallet.ui.prompt.biometric.showBiometricPrompt
 import com.android.identity.appsupport.ui.consent.ConsentField
 import com.android.identity.appsupport.ui.consent.ConsentRelyingParty
@@ -52,14 +53,15 @@ private suspend fun showPresentmentFlowImpl(
 ): ByteArray {
     val preconsentStore = PreconsentStore.getInstance()
 
+    // Get settings model from walletApplication
+    val settingsModel = (activity.application as WalletApplication).settingsModel
+    val preconsentEnabled = settingsModel.preconsentEnabled.value!!
+    Logger.i(TAG, "showPresentmentFlowImpl: preconsentEnabled: $preconsentEnabled")
+
     // Start the timer to measure the time taken to complete the presentment flow
     val startTime = System.currentTimeMillis()
 
     // *** Preconsent Logic ***
-    // TODO: Get the preconsentEnabled value from the settings and remove the hardcoded value
-    //  if enabled ui should show preconsent area, otherwise it should not
-    val preconsentEnabled = true
-
     // Check if the relying party is trusted
     val isRelyingPartyTrusted = relyingParty.trustPoint != null
 
@@ -76,18 +78,18 @@ private suspend fun showPresentmentFlowImpl(
     } else null
 
     // Check if previously not requested consent fields are now requested
-    val addedFields = if (existingPreconsent != null) {
+    val addedFields = if (preconsentEnabled && existingPreconsent != null) {
         val displayNames = existingPreconsent.consentFields.map { it.displayName }
         consentFields.filter { it.displayName !in displayNames }
     } else emptyList()
 
     // Check if the consent prompt can be skipped
-    val skipConsentPrompt = isRelyingPartyTrusted && existingPreconsent != null && addedFields.isEmpty()
+    val skipConsentPrompt = preconsentEnabled && isRelyingPartyTrusted && existingPreconsent != null && addedFields.isEmpty()
     if (!skipConsentPrompt) {
         // Check if preconsent is allowed by all fields and if relying party is trusted,
         //  if, only if, all conditions are met, the preconsent is allowed
         val isPreconsentAllowedByFields = consentFields.all { it.attribute?.preconsentAllowed == true }
-        val isPreconsentAllowed = isRelyingPartyTrusted && isPreconsentAllowedByFields
+        val isPreconsentAllowed = preconsentEnabled && isRelyingPartyTrusted && isPreconsentAllowedByFields
 
         // show consent prompt
         showConsentPrompt(
@@ -95,6 +97,7 @@ private suspend fun showPresentmentFlowImpl(
             document = document,
             relyingParty = relyingParty,
             consentFields = consentFields,
+            preconsentEnabled = preconsentEnabled,
             isPreconsentAllowed = isPreconsentAllowed,
             addedFields = addedFields
         ).let { result ->
