@@ -30,6 +30,6 @@
     <string name="preconsent_modal_bottom_sheet_button_delete">Delete</string>
 
     <!-- PreconsentList -->
-    <string name="preconsent_list_num_shared_fields_info">%1d fields will be shared</string>
+    <string name="preconsent_list_num_shared_fields_info">%1$d fields will be shared</string>
     <string name="preconsent_list_details_icon_description">Details Icon</string>
 </resources>
