@@ -21,7 +21,7 @@ object HEICommonID {
     fun getDocumentType(): DocumentType {
         return DocumentType.Builder("HEI Common ID")
             .addMdocDocumentType(DOCTYPE)
-            .addVcDocumentType(DOCTYPE)
+            .addVcDocumentType("HEICommonIDCredential")
             .addAttribute(
                 DocumentAttributeType.Picture,
                 "portrait",
@@ -77,7 +77,7 @@ object HEICommonID {
                 "eduPersonAffiliation",
                 "Group Affiliation",
                 "Group affiliation of the ID holder",
-                mandatory = true,
+                mandatory = false,
                 EDUPERSON_NAMESPACE,
                 Icon.PERSON,
                 SampleData.EDUPERSON_AFFILIATION.toDataItem()
@@ -97,7 +97,7 @@ object HEICommonID {
                 "schacHomeOrganization",
                 "Home Organization",
                 "Home organization of the ID holder",
-                mandatory = true,
+                mandatory = false,
                 SCHAC_NAMESPACE,
                 Icon.PERSON,
                 SampleData.SCHAC_HOME_ORGANIZATION.toDataItem()
@@ -179,7 +179,7 @@ object HEICommonID {
                 "issue_date",
                 "Date of Issue",
                 "Date when mDL was issued",
-                mandatory = false,
+                mandatory = true,
                 EXTRA_NAMESPACE,
                 Icon.DATE_RANGE,
                 SampleData.issueDate.toDataItemFullDate()
@@ -326,12 +326,13 @@ object HEICommonID {
                         "portrait" to false,
                         "sn" to false,
                         "givenNames" to false,
-                        "eduPersonAffiliation" to false,
                     ),
                     SCHAC_NAMESPACE to mapOf(
-                        "schacHomeOrganization" to false,
                         "schacDateOfBirth" to false,
                         "schacExpiryDate" to false,
+                    ),
+                    EXTRA_NAMESPACE to mapOf(
+                        "issue_date" to false
                     )
                 )
             )
