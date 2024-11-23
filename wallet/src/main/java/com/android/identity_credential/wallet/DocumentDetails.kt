@@ -9,6 +9,7 @@ import com.android.identity.documenttype.DocumentAttributeType
 import com.android.identity.documenttype.DocumentTypeRepository
 import com.android.identity.documenttype.MdocDocumentType
 import com.android.identity.documenttype.knowntypes.DrivingLicense
+import com.android.identity.documenttype.knowntypes.HEICommonID
 import com.android.identity.documenttype.knowntypes.PhotoID
 import com.android.identity.jpeg2k.Jpeg2kConverter
 import com.android.identity.mdoc.credential.MdocCredential
@@ -74,7 +75,7 @@ private fun visitNamespace(
             )
 
             if (mdocDataElement.attribute.type == DocumentAttributeType.Picture &&
-                namespaceName == DrivingLicense.MDL_NAMESPACE) {
+                namespaceName == DrivingLicense.MDL_NAMESPACE || namespaceName == HEICommonID.SCHAC_NAMESPACE || namespaceName == HEICommonID.EXTRA_NAMESPACE)  {
                 when (mdocDataElement.attribute.identifier) {
                     "portrait" -> {
                         portrait = elementValue.asBstr
