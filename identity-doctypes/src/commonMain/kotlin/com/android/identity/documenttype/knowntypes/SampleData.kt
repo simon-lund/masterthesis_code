@@ -16,10 +16,19 @@ internal object SampleData {
 
     const val GIVEN_NAME = "Erika"
     const val FAMILY_NAME = "Mustermann"
+    const val MAIL = "erika.mustermann@example.com"
     const val GIVEN_NAME_BIRTH = "Erika"
     const val FAMILY_NAME_BIRTH = "Mustermann"
     const val GIVEN_NAMES_NATIONAL_CHARACTER = "Ерика"
     const val FAMILY_NAME_NATIONAL_CHARACTER = "Бабіак"
+
+    // HEICommonID sample data
+    const val EDUPERSON_AFFILIATION = "student"
+    const val EDUPERSON_ENTITLEMENT = "https://example.com/contracts/HEd123"
+    const val SCHAC_HOME_ORGANIZATION = "lmu.de"
+    const val SCHAC_PERSONAL_UNIQUE_CODE = "urn:mace:terena.org:schac:personalUniqueCode:int:studentID:de:1234567890"
+    const val SCHAC_MOTHER_TONGUE = "de"
+    const val SCHAC_GENDER = 2
 
     val birthDate = LocalDate.parse("1971-09-01")
     const val BIRTH_COUNTRY = "ZZ"  // Note: ZZ is a user-assigned country-code as per ISO 3166-1

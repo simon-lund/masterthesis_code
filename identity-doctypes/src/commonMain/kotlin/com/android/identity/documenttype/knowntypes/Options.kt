@@ -53,6 +53,30 @@ object Options {
     )
 
     /**
+     * Eduperson Affiliation values.
+     */
+    val EDUPERSON_AFFILIATION = listOf(
+        StringOption("faculty", "Faculty"),
+        StringOption("student", "Student"),
+        StringOption("staff", "Staff"),
+        StringOption("alum", "Alum"),
+        StringOption("member", "Member"),
+        StringOption("affiliate", "Affiliate"),
+        StringOption("employee", "Employee"),
+        StringOption("library-walk-in", "Library Walk-in"),
+    )
+
+    /**
+     * SCHAC Gender values.
+     */
+    val SCHAC_GENDER = listOf(
+        IntegerOption(0, "Not known"),
+        IntegerOption(1, "Male"),
+        IntegerOption(2, "Female"),
+        IntegerOption(9, "Not specified")
+    )
+
+    /**
      * ISO 3166-1 Alpha 2 values for Countries.
      */
     val COUNTRY_ISO_3166_1_ALPHA_2 = listOf(
