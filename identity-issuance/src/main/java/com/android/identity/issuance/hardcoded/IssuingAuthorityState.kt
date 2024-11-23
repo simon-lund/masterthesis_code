@@ -26,6 +26,7 @@ import com.android.identity.documenttype.DocumentType
 import com.android.identity.documenttype.DocumentTypeRepository
 import com.android.identity.documenttype.knowntypes.DrivingLicense
 import com.android.identity.documenttype.knowntypes.EUPersonalID
+import com.android.identity.documenttype.knowntypes.HEICommonID
 import com.android.identity.documenttype.knowntypes.PhotoID
 import com.android.identity.flow.annotation.FlowJoin
 import com.android.identity.flow.annotation.FlowMethod
@@ -91,6 +92,11 @@ private const val AAMVA_NAMESPACE = DrivingLicense.AAMVA_NAMESPACE
 
 private const val EUPID_DOCTYPE = EUPersonalID.EUPID_DOCTYPE
 private const val EUPID_NAMESPACE = EUPersonalID.EUPID_NAMESPACE
+
+private const val HEICID_DOCTYPE = HEICommonID.DOCTYPE
+private const val HEICID_EDUPERSON_NAMESPACE = HEICommonID.EDUPERSON_NAMESPACE
+private const val HEICID_SCHAC_NAMESPACE = HEICommonID.SCHAC_NAMESPACE
+private const val HEICID_EXTRA_NAMESPACE = HEICommonID.EXTRA_NAMESPACE
 
 private const val PHOTO_ID_DOCTYPE = PhotoID.PHOTO_ID_DOCTYPE
 private const val PHOTO_ID_NAMESPACE = PhotoID.PHOTO_ID_NAMESPACE
@@ -161,6 +167,7 @@ class IssuingAuthorityState(
         val documentTypeRepository = DocumentTypeRepository().apply {
             addDocumentType(DrivingLicense.getDocumentType())
             addDocumentType(EUPersonalID.getDocumentType())
+            addDocumentType(HEICommonID.getDocumentType())
             addDocumentType(PhotoID.getDocumentType())
         }
     }
@@ -371,6 +378,7 @@ class IssuingAuthorityState(
                 TYPE_DRIVING_LICENSE -> MDL_NAMESPACE
                 TYPE_EU_PID -> EUPID_NAMESPACE
                 TYPE_PHOTO_ID -> PHOTO_ID_NAMESPACE
+                TYPE_HEICID -> HEICID_EXTRA_NAMESPACE
                 else -> throw IllegalArgumentException("Unknown type $type")
             }
             val newAdministrativeNumber = try {
@@ -423,6 +431,7 @@ class IssuingAuthorityState(
             TYPE_DRIVING_LICENSE -> MDL_NAMESPACE
             TYPE_EU_PID -> EUPID_NAMESPACE
             TYPE_PHOTO_ID -> PHOTO_ID_NAMESPACE
+            TYPE_HEICID -> HEICID_EXTRA_NAMESPACE
             else -> throw IllegalArgumentException("Unknown type $type")
         }
         builder.putEntryString(
@@ -478,6 +487,7 @@ class IssuingAuthorityState(
             TYPE_DRIVING_LICENSE -> MDL_DOCTYPE
             TYPE_EU_PID -> EUPID_DOCTYPE
             TYPE_PHOTO_ID -> PHOTO_ID_DOCTYPE
+            TYPE_HEICID -> HEICID_DOCTYPE
             else -> throw IllegalArgumentException("Unknown type $type")
         }
         val msoGenerator = MobileSecurityObjectGenerator(
@@ -628,6 +638,7 @@ class IssuingAuthorityState(
             TYPE_DRIVING_LICENSE -> generateMdlDocumentConfiguration(env, collectedEvidence)
             TYPE_EU_PID -> generateEuPidDocumentConfiguration(env, collectedEvidence)
             TYPE_PHOTO_ID -> generatePhotoIdDocumentConfiguration(env, collectedEvidence)
+            TYPE_HEICID -> generateHeiCommonIdDocumentConfiguration(env, collectedEvidence)
             else -> throw IllegalArgumentException("Unknown type $type")
         }
     }
@@ -768,6 +779,100 @@ class IssuingAuthorityState(
                 EUPersonalID.EUPID_VCT
             ),
         )
+    }
+
+    private suspend fun generateHeiCommonIdDocumentConfiguration(
+        env: FlowEnvironment,
+        collectedEvidence: Map<String, EvidenceResponse>
+    ): DocumentConfiguration {
+        val now = Clock.System.now()
+        val issueDate = now
+        val expiryDate = now + 365.days * 5
+
+        Logger.i(TAG, "Generating HEI Common ID document configuration")
+
+        val resources = env.getInterface(Resources::class)!!
+        val settings = WalletServerSettings(env.getInterface(Configuration::class)!!)
+
+        val prefix = "issuingAuthority.$authorityId"
+        val artPath = settings.getString("${prefix}.cardArt") ?: "default/card_art.png"
+        val issuingAuthorityName = settings.getString("${prefix}.name") ?: "Default Issuer"
+        val art = resources.getRawResource(artPath)!!
+
+        val credType = documentTypeRepository.getDocumentTypeForMdoc(HEICID_DOCTYPE)!!
+        val staticData: NameSpacedData
+
+        val path = (collectedEvidence["path"] as EvidenceResponseQuestionMultipleChoice).answerId
+        if (path !== "hardcoded") {
+
+            val imageFormat = collectedEvidence["devmode_image_format"]
+            val jpeg2k = imageFormat is EvidenceResponseQuestionMultipleChoice &&
+                    imageFormat.answerId == "devmode_image_format_jpeg2000"
+            staticData = fillInSampleData(resources, jpeg2k, credType).build()
+        } else {
+            val icaoPassiveData = collectedEvidence["passive"]
+            val icaoTunnelData = collectedEvidence["tunnel"]
+            val mrtdData = if (icaoTunnelData is EvidenceResponseIcaoNfcTunnelResult)
+                MrtdNfcData(icaoTunnelData.dataGroups, icaoTunnelData.securityObject)
+            else if (icaoPassiveData is EvidenceResponseIcaoPassiveAuthentication)
+                MrtdNfcData(icaoPassiveData.dataGroups, icaoPassiveData.securityObject)
+            else
+                throw IllegalStateException("Should not happen")
+            val decoded = MrtdNfcDataDecoder().decode(mrtdData)
+            val firstName = decoded.firstName
+            val lastName = decoded.lastName
+            val sex = when (decoded.gender) {
+                "MALE" -> 1L
+                "FEMALE" -> 2L
+                else -> 0L
+            }
+            val timeZone = TimeZone.currentSystemDefault()
+            val dateOfBirth = LocalDate.parse(
+                input = decoded.dateOfBirth,
+                format = LocalDate.Format {
+                    // date of birth cannot be in future
+                    yearTwoDigits(now.toLocalDateTime(timeZone).year - 99)
+                    monthNumber()
+                    dayOfMonth()
+                })
+            val dateOfBirthInstant = dateOfBirth.atStartOfDayIn(timeZone)
+            val portrait = decoded.photo ?: resources.getRawResource("img_erika_portrait.jpg")!!
+
+            staticData = NameSpacedData.Builder()
+                .putEntryByteString(HEICID_EDUPERSON_NAMESPACE, "portrait", portrait.toByteArray())
+                .putEntryString(HEICID_EDUPERSON_NAMESPACE, "sn", lastName)
+                .putEntryString(HEICID_EDUPERSON_NAMESPACE, "givenNames", firstName)
+                .putEntry(
+                    HEICID_SCHAC_NAMESPACE, "schacDateOfBirth",
+                    Cbor.encode(dateOfBirth.toDataItemFullDate())
+                )
+                .putEntry(
+                    HEICID_SCHAC_NAMESPACE, "issue_date",
+                    Cbor.encode(issueDate.toDataItemDateTimeString())
+                )
+                .putEntry(
+                    HEICID_SCHAC_NAMESPACE, "schacExpiryDate",
+                    Cbor.encode(expiryDate.toDataItemDateTimeString())
+                )
+                .build()
+        }
+
+        val firstName = staticData.getDataElementString(HEICID_EDUPERSON_NAMESPACE, "givenNames")
+
+
+        return DocumentConfiguration(
+            displayName = "$firstName's HEI Common ID",
+            typeDisplayName = "HEI Common ID",
+            cardArt = art.toByteArray(),
+            requireUserAuthenticationToViewDocument =
+                settings.getBool("${prefix}.requireUserAuthenticationToViewDocument"),
+            mdocConfiguration = MdocDocumentConfiguration(
+                docType = HEICID_DOCTYPE,
+                staticData = staticData,
+            ),
+            sdJwtVcDocumentConfiguration = null
+        )
+
     }
 
     private suspend fun generateMdlDocumentConfiguration(
@@ -1108,28 +1213,48 @@ class IssuingAuthorityState(
             }
         }
 
-        if (documentType == documentTypeRepository.getDocumentTypeForMdoc(MDL_DOCTYPE)!!) {
-            val portrait = resources.getRawResource(if (jpeg2k) {
-                "img_erika_portrait.jpf"
-            } else {
-                "img_erika_portrait.jpg"
-            })!!.toByteArray()
-            val signatureOrUsualMark = resources.getRawResource(if (jpeg2k) {
-                "img_erika_signature.jpf"
-            } else {
-                "img_erika_signature.jpg"
-            })!!.toByteArray()
-            builder
-                .putEntryByteString(MDL_NAMESPACE, "portrait", portrait)
-                .putEntryByteString(MDL_NAMESPACE, "signature_usual_mark", signatureOrUsualMark)
-        } else if (documentType == documentTypeRepository.getDocumentTypeForMdoc(PHOTO_ID_DOCTYPE)!!) {
-            val portrait = resources.getRawResource(if (jpeg2k) {
-                "img_erika_portrait.jpf"
-            } else {
-                "img_erika_portrait.jpg"
-            })!!.toByteArray()
-            builder
-                .putEntryByteString(ISO_23220_2_NAMESPACE, "portrait", portrait)
+        when (documentType) {
+            documentTypeRepository.getDocumentTypeForMdoc(MDL_DOCTYPE)!! -> {
+                val portrait = resources.getRawResource(
+                    if (jpeg2k) {
+                        "img_erika_portrait.jpf"
+                    } else {
+                        "img_erika_portrait.jpg"
+                    }
+                )!!.toByteArray()
+                val signatureOrUsualMark = resources.getRawResource(
+                    if (jpeg2k) {
+                        "img_erika_signature.jpf"
+                    } else {
+                        "img_erika_signature.jpg"
+                    }
+                )!!.toByteArray()
+                builder
+                    .putEntryByteString(MDL_NAMESPACE, "portrait", portrait)
+                    .putEntryByteString(MDL_NAMESPACE, "signature_usual_mark", signatureOrUsualMark)
+            }
+            documentTypeRepository.getDocumentTypeForMdoc(PHOTO_ID_DOCTYPE)!! -> {
+                val portrait = resources.getRawResource(
+                    if (jpeg2k) {
+                        "img_erika_portrait.jpf"
+                    } else {
+                        "img_erika_portrait.jpg"
+                    }
+                )!!.toByteArray()
+                builder
+                    .putEntryByteString(ISO_23220_2_NAMESPACE, "portrait", portrait)
+            }
+            documentTypeRepository.getDocumentTypeForMdoc(HEICID_DOCTYPE)!! -> {
+                val portrait = resources.getRawResource(
+                    if (jpeg2k) {
+                        "img_erika_portrait.jpf"
+                    } else {
+                        "img_erika_portrait.jpg"
+                    }
+                )!!.toByteArray()
+                builder
+                    .putEntryByteString(HEICID_EDUPERSON_NAMESPACE, "portrait", portrait)
+            }
         }
 
         return builder
