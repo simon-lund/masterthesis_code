@@ -85,9 +85,14 @@ class RequestCustomFragment : Fragment() {
                     it?.itemsToRequest = (vm.getSelectedDataItems(false))
                 }
             findNavController().navigate(
-                RequestCustomFragmentDirections.actionRequestCustomToScanDeviceEngagement(
-                    requestDocumentList
-                )
+                // Currently, we are navigating back to RequestOptions
+                  RequestCustomFragmentDirections.actionRequestCustomToRequestOptions(
+                      requestDocumentList = requestDocumentList
+                  )
+                // Uncomment the following line to navigate to ScanDeviceEngagement (and comment the above lines)
+//                RequestCustomFragmentDirections.actionRequestCustomToScanDeviceEngagement(
+//                    requestDocumentList
+//                )
             )
         }
         binding.btCancel.setOnClickListener {

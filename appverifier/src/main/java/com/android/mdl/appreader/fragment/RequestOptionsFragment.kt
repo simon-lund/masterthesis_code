@@ -94,7 +94,7 @@ class RequestOptionsFragment() : Fragment() {
                         modifier = Modifier.fillMaxSize(),
                         state = state,
                         onSelectionUpdated = createRequestViewModel::onRequestUpdate,
-                        onRequestConfirm = { onRequestConfirmed(it.isCustomMdlRequest) },
+                        onRequestConfirm = { onRequestConfirmed(it.isCustomMdlRequest, it.heicidCustom.isSelected) },
                         onRequestQRCodePreview = { navigateToQRCodeScan(it.isCustomMdlRequest) },
                         onRequestPreviewProtocol = { onRequestViaCredman("preview", it)},
                         onRequestOpenId4VPProtocol = { onRequestViaCredman("openid4vp", it)}
@@ -287,7 +287,11 @@ class RequestOptionsFragment() : Fragment() {
     }
 
     private fun onDeviceEngagementReceived() {
-        val requestedDocuments = calcRequestDocumentList()
+        val requestedDocuments = if (args.requestDocumentList != null) {
+            args.requestDocumentList!!
+        } else {
+            calcRequestDocumentList()
+        }
         val destination = if (transferManager.availableMdocConnectionMethods?.size == 1) {
             RequestOptionsFragmentDirections.toTransfer(requestedDocuments)
         } else {
@@ -324,9 +328,13 @@ class RequestOptionsFragment() : Fragment() {
         startActivity(intent)
     }
 
-    private fun onRequestConfirmed(isCustomMdlRequest: Boolean) {
+    private fun onRequestConfirmed(isCustomMdlRequest: Boolean, isCustomHEICommonIDRequest: Boolean) {
         if (isCustomMdlRequest) {
             val destination = getCustomMdlDestination()
+            findNavController().navigate(destination)
+        }
+        if (isCustomHEICommonIDRequest) {
+            val destination = getCustomHEICommonIDDestination()
             findNavController().navigate(destination)
         }
     }
@@ -350,6 +358,16 @@ class RequestOptionsFragment() : Fragment() {
         val mdl = requestDocumentList.getAll().first { it.docType == RequestDocument.MDL_DOCTYPE }
         return RequestOptionsFragmentDirections.toRequestCustom(
             mdl,
+            requestDocumentList,
+            args.keepConnection
+        )
+    }
+
+    private fun getCustomHEICommonIDDestination():NavDirections {
+        val requestDocumentList = calcRequestDocumentList()
+        val heiCommonID = requestDocumentList.getAll().first { it.docType == RequestDocument.HEICID_DOCTYPE }
+        return RequestOptionsFragmentDirections.toRequestCustom(
+            heiCommonID,
             requestDocumentList,
             args.keepConnection
         )

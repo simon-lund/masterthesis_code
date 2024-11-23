@@ -14,6 +14,12 @@
             android:name="keepConnection"
             android:defaultValue="false"
             app:argType="boolean" />
+        <argument
+            android:name="requestDocumentList"
+            android:defaultValue="@null"
+            app:argType="com.android.mdl.appreader.document.RequestDocumentList"
+            app:nullable="true"
+        />
         <action
             android:id="@+id/toScanDeviceEngagement"
             app:destination="@id/scanDeviceEngagement" />

@@ -158,6 +158,14 @@ class CreateRequestViewModel : ViewModel() {
                 )
             )
         }
+        if(uiState.heicidCustom.isSelected) {
+            requestDocumentList.addRequestDocument(
+                getRequestDocument(
+                    RequestDocument.HEICID_DOCTYPE,
+                    intentToRetain
+                )
+            )
+        }
         if (uiState.mdlWithLinkage.isSelected) {
             requestDocumentList.addRequestDocument(
                 getRequestDocument(
