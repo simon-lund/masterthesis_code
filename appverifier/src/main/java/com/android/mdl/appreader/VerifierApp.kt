@@ -7,10 +7,7 @@ import androidx.preference.PreferenceManager
 import com.android.identity.crypto.X509Cert
 import com.android.identity.crypto.javaX509Certificate
 import com.android.identity.documenttype.DocumentTypeRepository
-import com.android.identity.documenttype.knowntypes.DrivingLicense
-import com.android.identity.documenttype.knowntypes.EUPersonalID
-import com.android.identity.documenttype.knowntypes.VaccinationDocument
-import com.android.identity.documenttype.knowntypes.VehicleRegistration
+import com.android.identity.documenttype.knowntypes.*
 import com.android.identity.mdoc.vical.SignedVical
 import com.android.identity.storage.GenericStorageEngine
 import com.android.identity.storage.StorageEngine
@@ -84,6 +81,7 @@ class VerifierApp : Application() {
         documentTypeRepositoryInstance.addDocumentType(VehicleRegistration.getDocumentType())
         documentTypeRepositoryInstance.addDocumentType(VaccinationDocument.getDocumentType())
         documentTypeRepositoryInstance.addDocumentType(EUPersonalID.getDocumentType())
+        documentTypeRepositoryInstance.addDocumentType(HEICommonID.getDocumentType())
     }
 
     companion object {

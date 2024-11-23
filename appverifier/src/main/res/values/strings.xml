@@ -22,6 +22,7 @@
     <string name="mvr_full">Request mVR"</string>
     <string name="micov_full">Request micov"</string>
     <string name="eu_pid_full">Request EU Personal ID"</string>
+    <string name="heicid_custom">HEI Common Id - Custom"</string>
 
     <!-- mDL strings -->
     <string name="family_name">Family Name</string>

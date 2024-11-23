@@ -83,6 +83,11 @@ fun CreateRequestDropDown(
             Spacer(modifier = Modifier.height(24.dp))
             ElementChip(
                 modifier = Modifier.fillMaxWidth(),
+                documentElementsRequest = selectionState.heicidCustom,
+                onRequestFieldsToggled = onSelectionUpdated
+            )
+            ElementChip(
+                modifier = Modifier.fillMaxWidth(),
                 documentElementsRequest = selectionState.mVR,
                 onRequestFieldsToggled = onSelectionUpdated
             )

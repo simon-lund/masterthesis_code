@@ -35,6 +35,7 @@ class CreateRequestViewModel : ViewModel() {
             state.value.custom.title -> mutableState.update { it.copy(custom = updated) }
             state.value.mVR.title -> mutableState.update { it.copy(mVR = updated) }
             state.value.micov.title -> mutableState.update { it.copy(micov = updated) }
+            state.value.heicidCustom.title -> mutableState.update { it.copy(heicidCustom = updated) }
             state.value.euPid.title -> mutableState.update { it.copy(euPid = updated) }
             state.value.mdlWithLinkage.title -> mutableState.update { it.copy(mdlWithLinkage = updated) }
         }

@@ -1,5 +1,6 @@
 package com.android.mdl.appreader.document
 
+import com.android.identity.documenttype.knowntypes.HEICommonID
 import java.io.Serializable
 
 
@@ -9,6 +10,7 @@ data class RequestDocument(
 ) : Serializable
 {
     companion object {
+        const val HEICID_DOCTYPE = HEICommonID.DOCTYPE
         const val MDL_DOCTYPE = "org.iso.18013.5.1.mDL"
         const val MDL_NAMESPACE = "org.iso.18013.5.1"
         const val MVR_DOCTYPE = "nl.rdw.mekb.1"
