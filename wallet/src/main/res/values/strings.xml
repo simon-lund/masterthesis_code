@@ -474,6 +474,21 @@
     <string name="utopia_eu_pid_issuing_authority_pending_document_title">Utopia PID (pending)</string>
     <string name="utopia_eu_pid_issuing_authority_document_title">%1$s\'s PID</string>
 
+    <!-- SelfSignedHEICommonIDIssuingAuthority -->
+    <string name="utopia_local_issuing_authority_heicid_description">Utopia University ID</string>
+    <string name="utopia_local_issuing_authority_heicid_name">Utopia University</string>
+    <string name="utopia_local_issuing_authority_heicid_tos"><![CDATA[
+        <img src=\'logo.png\' style=\'height: 150px; display: block; margin: auto\'
+           alt=\'Utopia University\'/>
+        <h2>Provisioning University ID</h2>
+        <p>In the following screens, information will be collected for provisioning of a University ID.</p>
+        <p>The University ID can only contain hard-coded data for a fictional person.</p>
+        <p>In this version of the Issuing Authority the University ID is generated and signed on-device.
+        In other versions the collected evidence are conveyed securely and privately to an issuance
+        server for evaluation and signing of the University ID.</p>
+        <p>The created University ID will be bound to this device.</p>
+    ]]> </string>
+
     <!-- Funke issuing authority TOS -->
     <string name="funke_issuing_authority_tos"><![CDATA[
         <h2>Provisioning a Personal Identification Data (PID) credential</h2>

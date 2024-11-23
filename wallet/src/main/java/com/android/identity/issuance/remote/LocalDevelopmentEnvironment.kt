@@ -78,25 +78,35 @@ internal class LocalDevelopmentEnvironment(
                 "androidRequireGmsAttestation" -> "false"
                 "androidRequireVerifiedBootGreen" -> "false"
                 "androidRequireAppSignatureCertificateDigests" -> ""
-                "issuingAuthorityList" -> "utopia_local utopia_local_pid utopia_local_photoid"
+
+                "issuingAuthorityList" -> "utopia_local utopia_local_pid utopia_local_photoid utopia_local_heicid"
                 "issuingAuthority.utopia_local.name" -> "Utopia DMV (Local)"
                 "issuingAuthority.utopia_local.type" -> "DrivingLicense"
                 "issuingAuthority.utopia_local.description" -> "Utopia Driver's License (Local)"
                 "issuingAuthority.utopia_local.logo" -> "utopia_local/logo.png"
                 "issuingAuthority.utopia_local.cardArt" -> "utopia_local/card_art.png"
                 "issuingAuthority.utopia_local.requireUserAuthenticationToViewDocument" -> "false"
+
                 "issuingAuthority.utopia_local_pid.name" -> "Utopia Gov (Local)"
                 "issuingAuthority.utopia_local_pid.type" -> "EuPid"
                 "issuingAuthority.utopia_local_pid.description" -> "Utopia Personal ID (Local)"
                 "issuingAuthority.utopia_local_pid.logo" -> "utopia_local_pid/logo.png"
                 "issuingAuthority.utopia_local_pid.cardArt" -> "utopia_local_pid/card_art.png"
                 "issuingAuthority.utopia_local_pid.requireUserAuthenticationToViewDocument" -> "false"
+
                 "issuingAuthority.utopia_local_photoid.name" -> "Utopia Gov (Local)"
                 "issuingAuthority.utopia_local_photoid.type" -> "PhotoId"
                 "issuingAuthority.utopia_local_photoid.description" -> "Utopia Photo ID (Local)"
                 "issuingAuthority.utopia_local_photoid.logo" -> "utopia_local_photoid/logo.png"
                 "issuingAuthority.utopia_local_photoid.cardArt" -> "utopia_local_photoid/card_art.png"
                 "issuingAuthority.utopia_local_photoid.requireUserAuthenticationToViewDocument" -> "false"
+
+                "issuingAuthority.utopia_local_heicid.name" -> "Utopia University (Local)"
+                "issuingAuthority.utopia_local_heicid.type" -> "HEICommonID"
+                "issuingAuthority.utopia_local_heicid.description" -> "Utopia University ID (Local)"
+                "issuingAuthority.utopia_local_heicid.logo" -> "utopia_local_heicid/logo.png"
+                "issuingAuthority.utopia_local_heicid.cardArt" -> "utopia_local_heicid/card_art.png"
+                "issuingAuthority.utopia_local_heicid.requireUserAuthenticationToViewDocument" -> "false"
                 "cloudSecureAreaUrl" -> settingsModel.cloudSecureAreaUrl.value
                 else -> null
             }
@@ -125,6 +135,11 @@ internal class LocalDevelopmentEnvironment(
                         R.drawable.utopia_photoid_card_art,
                         Bitmap.CompressFormat.PNG
                     )
+                "utopia_local_heicid/card_art.png" ->
+                    bitmapData(
+                        R.drawable.utopia_heicid_card_art,
+                        Bitmap.CompressFormat.PNG
+                    )
                 "utopia_local/logo.png" ->
                     bitmapData(
                         R.drawable.utopia_dmv_issuing_authority_logo,
@@ -138,6 +153,11 @@ internal class LocalDevelopmentEnvironment(
                 "utopia_local_photoid/logo.png" ->
                     bitmapData(
                         R.drawable.utopia_pid_issuing_authority_logo,
+                        Bitmap.CompressFormat.PNG
+                    )
+                "utopia_local_heicid/logo.png" ->
+                    bitmapData(
+                        R.drawable.utopia_heicid_issuing_authority_logo,
                         Bitmap.CompressFormat.PNG
                     )
                 "funke/card_art_funke_generic.png"  ->
@@ -195,6 +215,8 @@ internal class LocalDevelopmentEnvironment(
                     context.resources.getString(R.string.utopia_local_issuing_authority_tos)
                 "utopia_local_pid/tos.html" ->
                     context.resources.getString(R.string.utopia_local_issuing_authority_pid_tos)
+                "utopia_local_heicid/tos.html" ->
+                    context.resources.getString(R.string.utopia_local_issuing_authority_heicid_tos)
                 "utopia_local_photoid/tos.html" ->
                     context.resources.getString(R.string.utopia_local_issuing_authority_photoid_tos)
                 "funke/tos.html" ->

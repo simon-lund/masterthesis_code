@@ -113,6 +113,7 @@ class IssuingAuthorityState(
         private const val TYPE_EU_PID = "EuPid"
         private const val TYPE_DRIVING_LICENSE = "DrivingLicense"
         private const val TYPE_PHOTO_ID = "PhotoId"
+        private const val TYPE_HEICID = "HEICommonID"
 
         fun getConfiguration(env: FlowEnvironment, id: String): IssuingAuthorityConfiguration {
             return env.cache(IssuingAuthorityConfiguration::class, id) { configuration, resources ->
@@ -141,6 +142,7 @@ class IssuingAuthorityState(
                             TYPE_DRIVING_LICENSE -> "Driving License"
                             TYPE_EU_PID -> "EU Personal ID"
                             TYPE_PHOTO_ID -> "Photo ID"
+                            TYPE_HEICID -> "HEI Common ID"
                             else -> throw IllegalArgumentException("Unknown type $type")
                         },
                         cardArt = art.toByteArray(),
