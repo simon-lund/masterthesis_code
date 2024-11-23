@@ -42,6 +42,7 @@ import com.android.identity.issuance.remote.WalletServerProvider
 import com.android.identity.mdoc.credential.MdocCredential
 import com.android.identity.mdoc.vical.SignedVical
 import com.android.identity.appsupport.ui.preconsent.PreconsentStore
+import com.android.identity.documenttype.knowntypes.HEICommonID
 import com.android.identity.sdjwt.credential.SdJwtVcCredential
 import com.android.identity.securearea.SecureAreaRepository
 import com.android.identity.securearea.software.SoftwareSecureArea
@@ -130,6 +131,7 @@ class WalletApplication : Application() {
         documentTypeRepository = DocumentTypeRepository()
         documentTypeRepository.addDocumentType(DrivingLicense.getDocumentType())
         documentTypeRepository.addDocumentType(EUPersonalID.getDocumentType())
+        documentTypeRepository.addDocumentType(HEICommonID.getDocumentType())
         documentTypeRepository.addDocumentType(PhotoID.getDocumentType())
 
         // init storage
