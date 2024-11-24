@@ -58,7 +58,12 @@ object KeysAndCertificates {
             Pair(R.raw.owf_identity_credential_reader_cert, R.raw.owf_identity_credential_reader_private_key)
         )
 
-        val currentCert = 4
+        // lmu = 0
+        // studierendenwerk = 1
+        // bayerische_staatsoper = 2
+        // entmt = 3
+        // mvg = 4
+        val currentCert = 1
 
 
         val certificate = X509Cert.fromPem(String(
