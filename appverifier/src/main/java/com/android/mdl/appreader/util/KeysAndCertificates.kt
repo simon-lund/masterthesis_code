@@ -53,11 +53,12 @@ object KeysAndCertificates {
             Pair(R.raw.reader_lmu_certificate, R.raw.reader_lmu_private_key),
             Pair(R.raw.reader_studierendenwerk_certificate, R.raw.reader_studierendenwerk_private_key),
             Pair(R.raw.reader_bayerische_staatsoper_certificate, R.raw.reader_bayerische_staatsoper_private_key),
-            Pair(R.raw.reader_kino_certificate, R.raw.reader_kino_private_key),
-            Pair(R.raw.owf_identity_credential_reader_cert, R.raw.owf_identity_credential_reader_private_key),
+            Pair(R.raw.reader_entmt_certificate, R.raw.reader_entmt_private_key),
+            Pair(R.raw.reader_mvg_certificate, R.raw.reader_mvg_private_key),
+            Pair(R.raw.owf_identity_credential_reader_cert, R.raw.owf_identity_credential_reader_private_key)
         )
 
-        val currentCert = 1
+        val currentCert = 4
 
 
         val certificate = X509Cert.fromPem(String(
