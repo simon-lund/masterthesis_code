@@ -159,6 +159,7 @@ class CreateRequestViewModel : ViewModel() {
                 )
             )
         }
+        // HEICID Options
         if(uiState.heicidCustom.isSelected) {
             requestDocumentList.addRequestDocument(
                 getRequestDocument(
@@ -172,7 +173,79 @@ class CreateRequestViewModel : ViewModel() {
                 getRequestDocument(
                     RequestDocument.HEICID_DOCTYPE,
                     intentToRetain,
-                    filterElement = { el -> el.attribute.identifier == "eduPersonAffiliation" }
+                    filterElement = { el ->
+                        listOf(
+                            "eduPersonAffiliation",
+                            "schacExpiryDate"
+                        ).contains(el.attribute.identifier)
+                    }
+                )
+            )
+        }
+        if (uiState.heicidProofOfAttendance.isSelected) {
+            requestDocumentList.addRequestDocument(
+                getRequestDocument(
+                    RequestDocument.HEICID_DOCTYPE,
+                    intentToRetain,
+                    filterElement = { el ->
+                        listOf(
+                            "schacPersonalUniqueCode",
+                            "schacExpiryDate"
+                        ).contains(el.attribute.identifier)
+                    }
+                )
+            )
+        }
+        if (uiState.heicidAgeVerification.isSelected) {
+            requestDocumentList.addRequestDocument(
+                getRequestDocument(
+                    RequestDocument.HEICID_DOCTYPE,
+                    intentToRetain,
+                    filterElement = { el ->
+                        listOf(
+                            "portrait",
+                            "schacDateOfBirth",
+                            "schacYearOfBirth",
+                            "age_over_18",
+                            "schacExpiryDate"
+                        ).contains(el.attribute.identifier)
+                    }
+                )
+            )
+        }
+        if (uiState.heicidIdentityVerification.isSelected) {
+            requestDocumentList.addRequestDocument(
+                getRequestDocument(
+                    RequestDocument.HEICID_DOCTYPE,
+                    intentToRetain,
+                    filterElement = { el ->
+                        listOf(
+                            "portrait",
+                            "givenNames",
+                            "sn",
+                            "schacPersonalUniqueCode",
+                            "schacGender",
+                            "schacExpiryDate"
+                        ).contains(el.attribute.identifier)
+                    }
+                )
+            )
+        }
+        if (uiState.heicidCrookedIdentityVerification.isSelected) {
+            requestDocumentList.addRequestDocument(
+                getRequestDocument(
+                    RequestDocument.HEICID_DOCTYPE,
+                    intentToRetain,
+                    filterElement = { el ->
+                        listOf(
+                            "portrait",
+                            "givenNames",
+                            "sn",
+                            "schacPersonalUniqueCode",
+                            "email",
+                            "schacExpiryDate"
+                        ).contains(el.attribute.identifier)
+                    }
                 )
             )
         }

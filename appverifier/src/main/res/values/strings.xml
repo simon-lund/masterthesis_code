@@ -22,8 +22,12 @@
     <string name="mvr_full">Request mVR"</string>
     <string name="micov_full">Request micov"</string>
     <string name="eu_pid_full">Request EU Personal ID"</string>
-    <string name="heicid_custom">HEI Common Id - Custom"</string>
-    <string name="heicid_affiliation">HEI Common Id - Affiliation"</string>
+    <string name="heicid_custom">HEICID - Custom"</string>
+    <string name="heicid_affiliation">HEICID - Affiliation"</string>
+    <string name="heicid_proof_of_attendance">HEICID - Proof of Attendance</string>
+    <string name="heicid_age_verification">HEICID - Age Verification"</string>
+    <string name="heicid_identity_verification">HEICID - Identity Verification"</string>
+    <string name="heicid_crooked_identity_verification">HEICID - Crooked Identity Verification"</string>
 
     <!-- mDL strings -->
     <string name="family_name">Family Name</string>

@@ -96,6 +96,26 @@ fun CreateRequestDropDown(
                 documentElementsRequest = selectionState.heicidAffiliation,
                 onRequestFieldsToggled = onSelectionUpdated
             )
+            ElementChip(
+                modifier = Modifier.fillMaxWidth(),
+                documentElementsRequest = selectionState.heicidProofOfAttendance,
+                onRequestFieldsToggled = onSelectionUpdated
+            )
+            ElementChip(
+                modifier = Modifier.fillMaxWidth(),
+                documentElementsRequest = selectionState.heicidAgeVerification,
+                onRequestFieldsToggled = onSelectionUpdated
+            )
+            ElementChip(
+                modifier = Modifier.fillMaxWidth(),
+                documentElementsRequest = selectionState.heicidIdentityVerification,
+                onRequestFieldsToggled = onSelectionUpdated
+            )
+            ElementChip(
+                modifier = Modifier.fillMaxWidth(),
+                documentElementsRequest = selectionState.heicidCrookedIdentityVerification,
+                onRequestFieldsToggled = onSelectionUpdated
+            )
             Divider(modifier = Modifier.padding(vertical = 8.dp))
             ElementChip(
                 modifier = Modifier.fillMaxWidth(),

@@ -15,6 +15,11 @@ data class RequestingDocumentState(
     val custom: DocumentElementsRequest = DocumentElementsRequest(R.string.mdl_custom),
     val heicidCustom: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_custom),
     val heicidAffiliation: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_affiliation),
+    val heicidProofOfAttendance: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_proof_of_attendance),
+    val heicidAgeVerification: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_age_verification),
+    val heicidIdentityVerification: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_identity_verification),
+    // This asks for more information than the required for the identity verification (i.e the email of a user)
+    val heicidCrookedIdentityVerification : DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_crooked_identity_verification),
     val mVR: DocumentElementsRequest = DocumentElementsRequest(R.string.mvr_full),
     val micov: DocumentElementsRequest = DocumentElementsRequest(R.string.micov_full),
     val euPid: DocumentElementsRequest = DocumentElementsRequest(R.string.eu_pid_full),
@@ -60,6 +65,22 @@ data class RequestingDocumentState(
             }
             if (heicidAffiliation.isSelected) {
                 append("HEI Common ID - Affiliation")
+                append("; ")
+            }
+            if (heicidProofOfAttendance.isSelected) {
+                append("HEI Common ID - Proof of Attendance")
+                append("; ")
+            }
+            if (heicidAgeVerification.isSelected) {
+                append("HEI Common ID - Age Verification")
+                append("; ")
+            }
+            if (heicidIdentityVerification.isSelected) {
+                append("HEI Common ID - Identity Verification")
+                append("; ")
+            }
+            if (heicidCrookedIdentityVerification.isSelected) {
+                append("HEI Common ID - Crooked Identity Verification")
                 append("; ")
             }
             if (custom.isSelected) {
