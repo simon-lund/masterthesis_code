@@ -203,6 +203,30 @@ class WalletApplication : Application() {
             getWalletApplicationInformation()
         }
 
+
+        // Add trust points for readers in the context of the HEI Common ID
+        readerTrustManager.addTrustPoint(
+            displayName = "LMU Reader",
+            certificateResourceId = R.raw.reader_lmu_certificate,
+            displayIconResourceId = R.drawable.lmu_logo
+        )
+        readerTrustManager.addTrustPoint(
+            displayName = "Studierendenwerk Reader",
+            certificateResourceId = R.raw.reader_studierendenwerk_certificate,
+            displayIconResourceId = R.drawable.studierendenwerk_logo
+        )
+        readerTrustManager.addTrustPoint(
+            displayName = "Bayerische Staatsoper Reader",
+            certificateResourceId = R.raw.reader_bayerische_staatsoper_certificate,
+            displayIconResourceId = R.drawable.bayerische_staatsoper_logo
+        )
+        readerTrustManager.addTrustPoint(
+            displayName = "Kino Reader",
+            certificateResourceId = R.raw.reader_kino_certificate,
+            displayIconResourceId = R.drawable.kino_logo
+        )
+
+
         // init TrustManager for readers (used in consent dialog)
         //
         readerTrustManager.addTrustPoint(
@@ -210,6 +234,7 @@ class WalletApplication : Application() {
             certificateResourceId = R.raw.owf_identity_credential_reader_cert,
             displayIconResourceId = R.drawable.owf_identity_credential_reader_display_icon
         )
+
         for (certResourceId in listOf(
             R.raw.austroad_test_event_reader_credence_id,
             R.raw.austroad_test_event_reader_fast_enterprises,

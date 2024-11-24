@@ -49,10 +49,21 @@ object KeysAndCertificates {
         getCertificate(context, R.raw.google_reader_ca)
 
     fun getReaderAuthority(context: Context): Pair<X509Cert, EcPrivateKey> {
+        val certs = listOf(
+            Pair(R.raw.reader_lmu_certificate, R.raw.reader_lmu_private_key),
+            Pair(R.raw.reader_studierendenwerk_certificate, R.raw.reader_studierendenwerk_private_key),
+            Pair(R.raw.reader_bayerische_staatsoper_certificate, R.raw.reader_bayerische_staatsoper_private_key),
+            Pair(R.raw.reader_kino_certificate, R.raw.reader_kino_private_key),
+            Pair(R.raw.owf_identity_credential_reader_cert, R.raw.owf_identity_credential_reader_private_key),
+        )
+
+        val currentCert = 1
+
+
         val certificate = X509Cert.fromPem(String(
-            context.resources.openRawResource(R.raw.owf_identity_credential_reader_cert).readBytes()))
+            context.resources.openRawResource(certs[currentCert].first).readBytes()))
         val privateKey = EcPrivateKey.fromPem(String(
-            context.resources.openRawResource(R.raw.owf_identity_credential_reader_private_key).readBytes()),
+            context.resources.openRawResource(certs[currentCert].second).readBytes()),
             certificate.ecPublicKey)
         return Pair(certificate, privateKey)
     }
