@@ -14,6 +14,7 @@ data class RequestingDocumentState(
     val mdlForUsTransportation: DocumentElementsRequest = DocumentElementsRequest(R.string.mdl_us_transportation, true),
     val custom: DocumentElementsRequest = DocumentElementsRequest(R.string.mdl_custom),
     val heicidCustom: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_custom),
+    val heicidAffiliation: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_affiliation),
     val mVR: DocumentElementsRequest = DocumentElementsRequest(R.string.mvr_full),
     val micov: DocumentElementsRequest = DocumentElementsRequest(R.string.micov_full),
     val euPid: DocumentElementsRequest = DocumentElementsRequest(R.string.eu_pid_full),
@@ -55,6 +56,10 @@ data class RequestingDocumentState(
             }
             if (heicidCustom.isSelected) {
                 append("HEI Common ID - Custom")
+                append("; ")
+            }
+            if (heicidAffiliation.isSelected) {
+                append("HEI Common ID - Affiliation")
                 append("; ")
             }
             if (custom.isSelected) {

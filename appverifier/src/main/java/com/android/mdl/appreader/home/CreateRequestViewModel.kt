@@ -36,6 +36,7 @@ class CreateRequestViewModel : ViewModel() {
             state.value.mVR.title -> mutableState.update { it.copy(mVR = updated) }
             state.value.micov.title -> mutableState.update { it.copy(micov = updated) }
             state.value.heicidCustom.title -> mutableState.update { it.copy(heicidCustom = updated) }
+            state.value.heicidAffiliation.title -> mutableState.update { it.copy(heicidAffiliation = updated) }
             state.value.euPid.title -> mutableState.update { it.copy(euPid = updated) }
             state.value.mdlWithLinkage.title -> mutableState.update { it.copy(mdlWithLinkage = updated) }
         }
@@ -163,6 +164,15 @@ class CreateRequestViewModel : ViewModel() {
                 getRequestDocument(
                     RequestDocument.HEICID_DOCTYPE,
                     intentToRetain
+                )
+            )
+        }
+        if(uiState.heicidAffiliation.isSelected) {
+            requestDocumentList.addRequestDocument(
+                getRequestDocument(
+                    RequestDocument.HEICID_DOCTYPE,
+                    intentToRetain,
+                    filterElement = { el -> el.attribute.identifier == "eduPersonAffiliation" }
                 )
             )
         }

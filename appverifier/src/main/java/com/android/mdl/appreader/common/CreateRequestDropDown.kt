@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
@@ -79,13 +80,23 @@ fun CreateRequestDropDown(
                 right = selectionState.custom,
                 onRequestFieldsToggled = onSelectionUpdated
             )
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = "HEI Common ID Options",
+                style = MaterialTheme.typography.titleSmall
+            )
             ElementChip(
                 modifier = Modifier.fillMaxWidth(),
                 documentElementsRequest = selectionState.heicidCustom,
                 onRequestFieldsToggled = onSelectionUpdated
             )
+            ElementChip(
+                modifier = Modifier.fillMaxWidth(),
+                documentElementsRequest = selectionState.heicidAffiliation,
+                onRequestFieldsToggled = onSelectionUpdated
+            )
+            Divider(modifier = Modifier.padding(vertical = 8.dp))
             ElementChip(
                 modifier = Modifier.fillMaxWidth(),
                 documentElementsRequest = selectionState.mVR,
