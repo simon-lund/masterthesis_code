@@ -217,21 +217,20 @@ class CreateRequestViewModel : ViewModel() {
                 )
             )
         }
-        val idElements = listOf(
-            "portrait",
-            "givenNames",
-            "sn",
-            "schacPersonalUniqueCode",
-            "schacGender",
-            "schacExpiryDate"
-        )
         if (uiState.heicidIdentityVerification.isSelected) {
             requestDocumentList.addRequestDocument(
                 getRequestDocument(
                     RequestDocument.HEICID_DOCTYPE,
                     intentToRetain,
                     filterElement = { el ->
-                        idElements.contains(el.attribute.identifier)
+                        listOf(
+                            "portrait",
+                            "givenNames",
+                            "sn",
+                            "schacPersonalUniqueCode",
+                            "schacGender",
+                            "schacExpiryDate"
+                        ).contains(el.attribute.identifier)
                     }
                 )
             )
@@ -243,7 +242,15 @@ class CreateRequestViewModel : ViewModel() {
                     intentToRetain,
                     filterElement = { el ->
                         // Id elements + email
-                        idElements.plus("mail").contains(el.attribute.identifier)
+                        listOf(
+                            "portrait",
+                            "givenNames",
+                            "sn",
+                            "schacPersonalUniqueCode",
+                            "schacGender",
+                            "schacExpiryDate",
+                            "email"
+                        ).contains(el.attribute.identifier)
                     }
                 )
             )
