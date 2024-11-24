@@ -27,7 +27,7 @@
     <string name="heicid_proof_of_attendance">HEICID - Proof of Attendance</string>
     <string name="heicid_age_verification">HEICID - Age Verification</string>
     <string name="heicid_identity_verification">HEICID - Identity Verification</string>
-    <string name="heicid_email">HEICID - Email</string>
+    <string name="heicid_crooked">HEICID - Crooked</string>
 
     <!-- mDL strings -->
     <string name="family_name">Family Name</string>

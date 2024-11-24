@@ -40,7 +40,7 @@ class CreateRequestViewModel : ViewModel() {
             state.value.heicidProofOfAttendance.title -> mutableState.update { it.copy(heicidProofOfAttendance = updated) }
             state.value.heicidAgeVerification.title -> mutableState.update { it.copy(heicidAgeVerification = updated) }
             state.value.heicidIdentityVerification.title -> mutableState.update { it.copy(heicidIdentityVerification = updated) }
-            state.value.heicidEmail.title -> mutableState.update { it.copy(heicidEmail = updated) }
+            state.value.heicidCrooked.title -> mutableState.update { it.copy(heicidCrooked = updated) }
             state.value.euPid.title -> mutableState.update { it.copy(euPid = updated) }
             state.value.mdlWithLinkage.title -> mutableState.update { it.copy(mdlWithLinkage = updated) }
         }
@@ -217,33 +217,33 @@ class CreateRequestViewModel : ViewModel() {
                 )
             )
         }
+        val idElements = listOf(
+            "portrait",
+            "givenNames",
+            "sn",
+            "schacPersonalUniqueCode",
+            "schacGender",
+            "schacExpiryDate"
+        )
         if (uiState.heicidIdentityVerification.isSelected) {
             requestDocumentList.addRequestDocument(
                 getRequestDocument(
                     RequestDocument.HEICID_DOCTYPE,
                     intentToRetain,
                     filterElement = { el ->
-                        listOf(
-                            "portrait",
-                            "givenNames",
-                            "sn",
-                            "schacPersonalUniqueCode",
-                            "schacGender",
-                            "schacExpiryDate"
-                        ).contains(el.attribute.identifier)
+                        idElements.contains(el.attribute.identifier)
                     }
                 )
             )
         }
-        if (uiState.heicidEmail.isSelected) {
+        if (uiState.heicidCrooked.isSelected) {
             requestDocumentList.addRequestDocument(
                 getRequestDocument(
                     RequestDocument.HEICID_DOCTYPE,
                     intentToRetain,
                     filterElement = { el ->
-                        listOf(
-                            "email",
-                        ).contains(el.attribute.identifier)
+                        // Id elements + email
+                        idElements.plus("mail").contains(el.attribute.identifier)
                     }
                 )
             )

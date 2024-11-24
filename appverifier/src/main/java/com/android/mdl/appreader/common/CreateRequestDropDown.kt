@@ -113,7 +113,7 @@ fun CreateRequestDropDown(
             )
             ElementChip(
                 modifier = Modifier.fillMaxWidth(),
-                documentElementsRequest = selectionState.heicidEmail,
+                documentElementsRequest = selectionState.heicidCrooked,
                 onRequestFieldsToggled = onSelectionUpdated
             )
             Divider(modifier = Modifier.padding(vertical = 8.dp))
