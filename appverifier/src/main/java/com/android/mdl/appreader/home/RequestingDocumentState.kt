@@ -18,8 +18,7 @@ data class RequestingDocumentState(
     val heicidProofOfAttendance: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_proof_of_attendance),
     val heicidAgeVerification: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_age_verification),
     val heicidIdentityVerification: DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_identity_verification),
-    // This asks for more information than the required for the identity verification (i.e the email of a user)
-    val heicidCrookedIdentityVerification : DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_crooked_identity_verification),
+    val heicidEmail : DocumentElementsRequest = DocumentElementsRequest(R.string.heicid_email),
     val mVR: DocumentElementsRequest = DocumentElementsRequest(R.string.mvr_full),
     val micov: DocumentElementsRequest = DocumentElementsRequest(R.string.micov_full),
     val euPid: DocumentElementsRequest = DocumentElementsRequest(R.string.eu_pid_full),
@@ -79,8 +78,8 @@ data class RequestingDocumentState(
                 append("HEI Common ID - Identity Verification")
                 append("; ")
             }
-            if (heicidCrookedIdentityVerification.isSelected) {
-                append("HEI Common ID - Crooked Identity Verification")
+            if (heicidEmail.isSelected) {
+                append("HEI Common ID - Email")
                 append("; ")
             }
             if (custom.isSelected) {

@@ -40,7 +40,7 @@ class CreateRequestViewModel : ViewModel() {
             state.value.heicidProofOfAttendance.title -> mutableState.update { it.copy(heicidProofOfAttendance = updated) }
             state.value.heicidAgeVerification.title -> mutableState.update { it.copy(heicidAgeVerification = updated) }
             state.value.heicidIdentityVerification.title -> mutableState.update { it.copy(heicidIdentityVerification = updated) }
-            state.value.heicidCrookedIdentityVerification.title -> mutableState.update { it.copy(heicidCrookedIdentityVerification = updated) }
+            state.value.heicidEmail.title -> mutableState.update { it.copy(heicidEmail = updated) }
             state.value.euPid.title -> mutableState.update { it.copy(euPid = updated) }
             state.value.mdlWithLinkage.title -> mutableState.update { it.copy(mdlWithLinkage = updated) }
         }
@@ -235,19 +235,14 @@ class CreateRequestViewModel : ViewModel() {
                 )
             )
         }
-        if (uiState.heicidCrookedIdentityVerification.isSelected) {
+        if (uiState.heicidEmail.isSelected) {
             requestDocumentList.addRequestDocument(
                 getRequestDocument(
                     RequestDocument.HEICID_DOCTYPE,
                     intentToRetain,
                     filterElement = { el ->
                         listOf(
-                            "portrait",
-                            "givenNames",
-                            "sn",
-                            "schacPersonalUniqueCode",
                             "email",
-                            "schacExpiryDate"
                         ).contains(el.attribute.identifier)
                     }
                 )
