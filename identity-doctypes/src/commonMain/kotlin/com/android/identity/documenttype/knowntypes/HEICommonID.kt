@@ -30,7 +30,8 @@ object HEICommonID {
                 mandatory = true,
                 EDUPERSON_NAMESPACE,
                 Icon.ACCOUNT_BOX,
-                null // TODO: include img_erika_portrait.jpg
+                null, // TODO: include img_erika_portrait.jpg
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Date,
@@ -40,7 +41,8 @@ object HEICommonID {
                 false,
                 EDUPERSON_NAMESPACE,
                 Icon.TODAY,
-                SampleData.portraitCaptureDate.toDataItemFullDate()
+                SampleData.portraitCaptureDate.toDataItemFullDate(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.String,
@@ -50,7 +52,8 @@ object HEICommonID {
                 mandatory = true,
                 EDUPERSON_NAMESPACE,
                 Icon.PERSON,
-                SampleData.FAMILY_NAME.toDataItem()
+                SampleData.FAMILY_NAME.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.String,
@@ -60,7 +63,8 @@ object HEICommonID {
                 mandatory = true,
                 EDUPERSON_NAMESPACE,
                 Icon.PERSON,
-                SampleData.GIVEN_NAME.toDataItem()
+                SampleData.GIVEN_NAME.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.String,
@@ -70,7 +74,8 @@ object HEICommonID {
                 mandatory = false,
                 EDUPERSON_NAMESPACE,
                 Icon.PERSON,
-                SampleData.MAIL.toDataItem()
+                SampleData.MAIL.toDataItem(),
+                preconsentAllowed = false
             )
             .addAttribute(
                 DocumentAttributeType.StringOptions(Options.EDUPERSON_AFFILIATION),
@@ -80,7 +85,8 @@ object HEICommonID {
                 mandatory = false,
                 EDUPERSON_NAMESPACE,
                 Icon.PERSON,
-                SampleData.EDUPERSON_AFFILIATION.toDataItem()
+                SampleData.EDUPERSON_AFFILIATION.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.String,
@@ -90,7 +96,8 @@ object HEICommonID {
                 mandatory = false,
                 EDUPERSON_NAMESPACE,
                 Icon.PERSON,
-                SampleData.EDUPERSON_ENTITLEMENT.toDataItem()
+                SampleData.EDUPERSON_ENTITLEMENT.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.String,
@@ -100,7 +107,8 @@ object HEICommonID {
                 mandatory = false,
                 SCHAC_NAMESPACE,
                 Icon.PERSON,
-                SampleData.SCHAC_HOME_ORGANIZATION.toDataItem()
+                SampleData.SCHAC_HOME_ORGANIZATION.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.String,
@@ -110,7 +118,8 @@ object HEICommonID {
                 mandatory = false,
                 SCHAC_NAMESPACE,
                 Icon.PERSON,
-                SampleData.SCHAC_PERSONAL_UNIQUE_CODE.toDataItem()
+                SampleData.SCHAC_PERSONAL_UNIQUE_CODE.toDataItem(),
+                preconsentAllowed = false
             )
             .addAttribute(
                 DocumentAttributeType.Date,
@@ -120,7 +129,8 @@ object HEICommonID {
                 mandatory = true,
                 SCHAC_NAMESPACE,
                 Icon.TODAY,
-                SampleData.birthDate.toDataItemFullDate()
+                SampleData.birthDate.toDataItemFullDate(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Number,
@@ -130,7 +140,8 @@ object HEICommonID {
                 mandatory = false,
                 SCHAC_NAMESPACE,
                 Icon.TODAY,
-                SampleData.AGE_BIRTH_YEAR.toDataItem()
+                SampleData.AGE_BIRTH_YEAR.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.String,
@@ -140,7 +151,8 @@ object HEICommonID {
                 mandatory = false,
                 SCHAC_NAMESPACE,
                 Icon.PLACE,
-                SampleData.BIRTH_PLACE.toDataItem()
+                SampleData.BIRTH_PLACE.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.String,
@@ -150,7 +162,8 @@ object HEICommonID {
                 mandatory = false,
                 SCHAC_NAMESPACE,
                 Icon.LANGUAGE,
-                SampleData.SCHAC_MOTHER_TONGUE.toDataItem()
+                SampleData.SCHAC_MOTHER_TONGUE.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.IntegerOptions(Options.SCHAC_GENDER),
@@ -160,7 +173,8 @@ object HEICommonID {
                 mandatory = false,
                 SCHAC_NAMESPACE,
                 Icon.PERSON,
-                SampleData.SCHAC_GENDER.toDataItem()
+                SampleData.SCHAC_GENDER.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Date,
@@ -170,7 +184,8 @@ object HEICommonID {
                 mandatory = true,
                 SCHAC_NAMESPACE,
                 Icon.CALENDAR_CLOCK,
-                SampleData.expiryDate.toDataItemFullDate()
+                SampleData.expiryDate.toDataItemFullDate(),
+                preconsentAllowed = true
             )
 
             // Additional attributes
@@ -182,7 +197,8 @@ object HEICommonID {
                 mandatory = true,
                 EXTRA_NAMESPACE,
                 Icon.DATE_RANGE,
-                SampleData.issueDate.toDataItemFullDate()
+                SampleData.issueDate.toDataItemFullDate(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.String,
@@ -192,7 +208,8 @@ object HEICommonID {
                 mandatory = false,
                 EXTRA_NAMESPACE,
                 Icon.NUMBERS,
-                SampleData.ADMINISTRATIVE_NUMBER.toDataItem()
+                SampleData.ADMINISTRATIVE_NUMBER.toDataItem(),
+                preconsentAllowed = false
             )
             .addMdocAttribute(
                 DocumentAttributeType.Boolean,
@@ -202,7 +219,8 @@ object HEICommonID {
                 mandatory = false,
                 EXTRA_NAMESPACE,
                 Icon.TODAY,
-                SampleData.AGE_OVER_16.toDataItem()
+                SampleData.AGE_OVER_16.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Boolean,
@@ -212,7 +230,8 @@ object HEICommonID {
                 mandatory = false,
                 EXTRA_NAMESPACE,
                 Icon.TODAY,
-                SampleData.AGE_OVER_18.toDataItem()
+                SampleData.AGE_OVER_18.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Boolean,
@@ -222,7 +241,8 @@ object HEICommonID {
                 mandatory = false,
                 EXTRA_NAMESPACE,
                 Icon.TODAY,
-                SampleData.AGE_OVER_21.toDataItem()
+                SampleData.AGE_OVER_21.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Boolean,
@@ -232,7 +252,8 @@ object HEICommonID {
                 mandatory = false,
                 EXTRA_NAMESPACE,
                 Icon.TODAY,
-                SampleData.AGE_OVER_25.toDataItem()
+                SampleData.AGE_OVER_25.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Boolean,
@@ -242,7 +263,8 @@ object HEICommonID {
                 mandatory = false,
                 EXTRA_NAMESPACE,
                 Icon.TODAY,
-                SampleData.AGE_OVER_60.toDataItem()
+                SampleData.AGE_OVER_60.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Boolean,
@@ -252,7 +274,8 @@ object HEICommonID {
                 mandatory = false,
                 EXTRA_NAMESPACE,
                 Icon.TODAY,
-                SampleData.AGE_OVER_62.toDataItem()
+                SampleData.AGE_OVER_62.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Boolean,
@@ -262,7 +285,8 @@ object HEICommonID {
                 mandatory = false,
                 EXTRA_NAMESPACE,
                 Icon.TODAY,
-                SampleData.AGE_OVER_65.toDataItem()
+                SampleData.AGE_OVER_65.toDataItem(),
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Boolean,
@@ -272,7 +296,8 @@ object HEICommonID {
                 mandatory = false,
                 EXTRA_NAMESPACE,
                 Icon.TODAY,
-                SampleData.AGE_OVER_68.toDataItem()
+                SampleData.AGE_OVER_68.toDataItem(),
+                preconsentAllowed = true
             )
 
             // Sample requests
