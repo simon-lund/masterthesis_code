@@ -11,9 +11,9 @@ class RequestCustomViewModel : ViewModel() {
     fun init(requestDocument: RequestDocument) {
         if (!isInitiated) {
             this.requestDocument = requestDocument
-            requestDocument.itemsToRequest.forEach { ns ->
-                selectedDataItems[ns.key] = ns.value.keys.toMutableList()
-            }
+//            requestDocument.itemsToRequest.forEach { ns ->
+//                selectedDataItems[ns.key] = ns.value.keys.toMutableList()
+//            }
             isInitiated = true
         }
     }
