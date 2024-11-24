@@ -37,6 +37,10 @@ class CreateRequestViewModel : ViewModel() {
             state.value.micov.title -> mutableState.update { it.copy(micov = updated) }
             state.value.heicidCustom.title -> mutableState.update { it.copy(heicidCustom = updated) }
             state.value.heicidAffiliation.title -> mutableState.update { it.copy(heicidAffiliation = updated) }
+            state.value.heicidProofOfAttendance.title -> mutableState.update { it.copy(heicidProofOfAttendance = updated) }
+            state.value.heicidAgeVerification.title -> mutableState.update { it.copy(heicidAgeVerification = updated) }
+            state.value.heicidIdentityVerification.title -> mutableState.update { it.copy(heicidIdentityVerification = updated) }
+            state.value.heicidCrookedIdentityVerification.title -> mutableState.update { it.copy(heicidCrookedIdentityVerification = updated) }
             state.value.euPid.title -> mutableState.update { it.copy(euPid = updated) }
             state.value.mdlWithLinkage.title -> mutableState.update { it.copy(mdlWithLinkage = updated) }
         }
