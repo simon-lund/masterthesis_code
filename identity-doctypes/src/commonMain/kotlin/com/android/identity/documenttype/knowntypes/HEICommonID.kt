@@ -119,7 +119,7 @@ object HEICommonID {
                 SCHAC_NAMESPACE,
                 Icon.PERSON,
                 SampleData.SCHAC_PERSONAL_UNIQUE_CODE.toDataItem(),
-                preconsentAllowed = false
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.Date,
