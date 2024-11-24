@@ -221,9 +221,14 @@ class WalletApplication : Application() {
             displayIconResourceId = R.drawable.bayerische_staatsoper_logo
         )
         readerTrustManager.addTrustPoint(
-            displayName = "Kino Reader",
-            certificateResourceId = R.raw.reader_kino_certificate,
-            displayIconResourceId = R.drawable.kino_logo
+            displayName = "SaveSeat GmbH Reader",
+            certificateResourceId = R.raw.reader_entmt_certificate,
+            displayIconResourceId = R.drawable.save_seat_gmbh_logo
+        )
+        readerTrustManager.addTrustPoint(
+            displayName = "MVG Reader",
+            certificateResourceId = R.raw.reader_mvg_certificate,
+            displayIconResourceId = R.drawable.mvg_logo//R.drawable.logos_swm_mvg
         )
 
 
