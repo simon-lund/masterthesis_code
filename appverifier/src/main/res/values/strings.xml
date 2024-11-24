@@ -23,6 +23,7 @@
     <string name="micov_full">Request micov"</string>
     <string name="eu_pid_full">Request EU Personal ID"</string>
     <string name="heicid_custom">HEI Common Id - Custom"</string>
+    <string name="heicid_affiliation">HEI Common Id - Affiliation"</string>
 
     <!-- mDL strings -->
     <string name="family_name">Family Name</string>
