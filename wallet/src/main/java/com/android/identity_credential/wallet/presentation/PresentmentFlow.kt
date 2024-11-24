@@ -34,6 +34,10 @@ import com.android.identity_credential.wallet.WalletApplication
 import com.android.identity_credential.wallet.ui.prompt.biometric.showBiometricPrompt
 import com.android.identity_credential.wallet.ui.prompt.consent.showConsentPrompt
 import com.android.identity_credential.wallet.ui.prompt.passphrase.showPassphrasePrompt
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
 
 const val TAG = "PresentmentFlow"
 const val MAX_PASSPHRASE_ATTEMPTS = 3
@@ -155,6 +159,23 @@ private suspend fun showPresentmentFlowImpl(
     // End the timer to measure the time taken to complete the presentment flow
     val endTime = System.currentTimeMillis()
     Logger.i(TAG, "Time taken to complete the presentment flow: ${endTime - startTime} ms, preconsentEnabled: ${preconsentEnabled}, consentSkipped: ${skipConsentPrompt}, verifierName: ${relyingParty.trustPoint?.displayName}")
+
+    // Write to file
+    val fileName = "timestamp_log.txt"
+    val logFile = File(activity.applicationContext.filesDir, fileName)
+
+    try {
+        withContext(Dispatchers.IO) {
+            FileOutputStream(logFile, true).use { outputStream ->
+                val logEntry = "${relyingParty.trustPoint?.displayName}; ${startTime}; ${endTime}; ${endTime - startTime}; ${preconsentEnabled}; ${skipConsentPrompt}\n"
+                outputStream.write(logEntry.toByteArray())
+            }
+        }
+        Logger.i(TAG, "Wrote to file: $logFile")
+    } catch (e: Exception) {
+        Logger.e(TAG, "Error writing to file: ${e.message}")
+    }
+
 
     // initially null and updated when catching a KeyLockedException in the while-loop below
     var keyUnlockData: KeyUnlockData? = null
