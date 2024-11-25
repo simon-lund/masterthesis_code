@@ -227,7 +227,6 @@ class CreateRequestViewModel : ViewModel() {
                             "portrait",
                             "givenNames",
                             "sn",
-                            "schacPersonalUniqueCode",
                             "schacGender",
                             "schacExpiryDate"
                         ).contains(el.attribute.identifier)
@@ -241,13 +240,8 @@ class CreateRequestViewModel : ViewModel() {
                     RequestDocument.HEICID_DOCTYPE,
                     intentToRetain,
                     filterElement = { el ->
-                        // Id elements + email
                         listOf(
-                            "portrait",
-                            "givenNames",
-                            "sn",
-                            "schacPersonalUniqueCode",
-                            "schacGender",
+                            "eduPersonAffiliation",
                             "schacExpiryDate",
                             "email"
                         ).contains(el.attribute.identifier)
