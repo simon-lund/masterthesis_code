@@ -75,7 +75,7 @@ object HEICommonID {
                 EDUPERSON_NAMESPACE,
                 Icon.PERSON,
                 SampleData.MAIL.toDataItem(),
-                preconsentAllowed = false
+                preconsentAllowed = true
             )
             .addAttribute(
                 DocumentAttributeType.StringOptions(Options.EDUPERSON_AFFILIATION),
