@@ -98,7 +98,8 @@ private suspend fun showPresentmentFlowImpl(
             consentFields = consentFields,
             preconsentEnabled = preconsentEnabled,
             isPreconsentAllowed = isPreconsentAllowed,
-            addedFields = addedFields
+            // This so that no fields are highlighted, when the preconsent is not allowed (even though a preconsent exists and new fields are requested). why? becaue in this case we fall back to one-time informed consent (i.e. precosent does not matter in this context)
+            addedFields = if (isPreconsentAllowed) addedFields else emptyList(),
         ).let { result ->
             val isConsentGiven = result.first
             val setupPreconsent = result.second
