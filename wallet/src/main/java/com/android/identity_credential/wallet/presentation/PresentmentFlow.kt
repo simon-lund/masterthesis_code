@@ -14,6 +14,7 @@ import com.android.identity.cbor.Cbor
 import com.android.identity.credential.Credential
 import com.android.identity.credential.SecureAreaBoundCredential
 import com.android.identity.crypto.Algorithm
+import com.android.identity.crypto.javaX509Certificate
 import com.android.identity.document.Document
 import com.android.identity.document.NameSpacedData
 import com.android.identity.issuance.DocumentExtensions.documentConfiguration
@@ -69,10 +70,15 @@ private suspend fun showPresentmentFlowImpl(
         preconsentStore.preconsents.find {
             val documentNameEquals = document.name == it.document.name
             val documentDescriptionEquals = document.description == it.document.description
-            val encodedCertificate = relyingParty.trustPoint?.certificate?.encodedCertificate!!
-            val certificateEquals =
-                encodedCertificate.contentEquals(it.relyingParty.trustPoint?.certificate?.encodedCertificate)
-            documentNameEquals && documentDescriptionEquals && certificateEquals
+
+            // Check subjects
+            val relyingPartySubject = relyingParty.trustPoint?.certificate?.javaX509Certificate?.subjectX500Principal
+            Logger.i(TAG, "RelyingParty Cert. Subject: $relyingPartySubject")
+
+            val preconsentSubject = it.relyingParty.trustPoint?.certificate?.javaX509Certificate?.subjectX500Principal
+
+            val relyingPartySubjectEquals = relyingPartySubject == preconsentSubject
+            documentNameEquals && documentDescriptionEquals && relyingPartySubjectEquals
         }
     } else null
 
