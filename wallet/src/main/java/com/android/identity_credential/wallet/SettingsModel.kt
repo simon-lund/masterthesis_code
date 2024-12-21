@@ -20,7 +20,7 @@ class SettingsModel(
     private val sharedPreferences: SharedPreferences
 ) {
     // Settings that are visible in the Settings screen
-    val preconsentEnabled = MutableLiveData(false)
+    val preconsentEnabled = MutableLiveData(true)
     val developerModeEnabled = MutableLiveData(false)
     val loggingEnabled = MutableLiveData(false)
     val activityLoggingEnabled = MutableLiveData(false)
